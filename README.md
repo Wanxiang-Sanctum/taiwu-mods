@@ -28,7 +28,6 @@ dotnet msbuild repo.proj -t:InstallTools
 ## 当前命令
 
 ```powershell
-dotnet build repo.proj
 dotnet msbuild repo.proj -t:Check
 dotnet msbuild repo.proj -t:Format
 ```
