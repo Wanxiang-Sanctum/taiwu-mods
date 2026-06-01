@@ -1,3 +1,6 @@
 <Solution>
   <Folder Name="/mods/" />
+  <Folder Name="/tools/">
+    <Project Path="tools/Taiwu.Mods.ModCreator/Taiwu.Mods.ModCreator.csproj" />
+  </Folder>
 </Solution>

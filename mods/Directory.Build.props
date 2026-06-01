@@ -1,25 +1,29 @@
 <Project>
+  <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
+  <Import
+    Project="$(MSBuildProjectDirectory)/Taiwu.Mod.props"
+    Condition="Exists('$(MSBuildProjectDirectory)/Taiwu.Mod.props')"
+  />
+
   <PropertyGroup>
+    <TargetFramework
+      Condition="'$(TargetFramework)' == '' And '$(TaiwuModSide)' == 'Frontend'"
+    >netstandard2.1</TargetFramework>
+    <TargetFramework
+      Condition="'$(TargetFramework)' == '' And '$(TaiwuModSide)' == 'Backend'"
+    >net6.0</TargetFramework>
     <TargetFramework Condition="'$(TargetFramework)' == ''"
     >netstandard2.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>All</AnalysisMode>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName Condition="'$(AssemblyName)' == ''"
+    >$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace Condition="'$(RootNamespace)' == ''"
+    >$(MSBuildProjectName)</RootNamespace>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Roslynator.Analyzers" PrivateAssets="all" />
+  <ItemGroup Condition="'$(TaiwuModSide)' != ''">
     <PackageReference
-      Include="Roslynator.Formatting.Analyzers"
+      Include="Taiwu.ModKit.References.Plugin"
       PrivateAssets="all"
     />
   </ItemGroup>
