@@ -1,4 +1,4 @@
-<Project>
+<Project InitialTargets="ValidateTaiwuModSide">
   <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
   <Import
     Project="$(MSBuildProjectDirectory)/Taiwu.Mod.props"
@@ -12,13 +12,14 @@
     <TargetFramework
       Condition="'$(TargetFramework)' == '' And '$(TaiwuModSide)' == 'Backend'"
     >net6.0</TargetFramework>
-    <TargetFramework Condition="'$(TargetFramework)' == ''"
-    >netstandard2.1</TargetFramework>
     <AssemblyName Condition="'$(AssemblyName)' == ''"
     >$(MSBuildProjectName)</AssemblyName>
     <RootNamespace Condition="'$(RootNamespace)' == ''"
     >$(MSBuildProjectName)</RootNamespace>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <UsePublicizer
+      Condition="'$(UsePublicizer)' == '' And ('$(TaiwuModSide)' == 'Frontend' Or '$(TaiwuModSide)' == 'Backend')"
+    >true</UsePublicizer>
     <InternalizeRuntimeDependencies
       Condition="'$(InternalizeRuntimeDependencies)' == ''"
     >true</InternalizeRuntimeDependencies>
@@ -32,15 +33,30 @@
     >$(MSBuildThisFileDirectory)Taiwu.Mod.ILRepack.targets</ILRepackTargetsFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TaiwuModSide)' != ''">
+  <Target Name="ValidateTaiwuModSide">
+    <Error
+      Condition="'$(TaiwuModSide)' == ''"
+      Text="TaiwuModSide must be Frontend or Backend. Set it in Taiwu.Mod.props."
+    />
+    <Error
+      Condition="'$(TaiwuModSide)' != 'Frontend' And '$(TaiwuModSide)' != 'Backend'"
+      Text="Unsupported TaiwuModSide '$(TaiwuModSide)'. Use Frontend or Backend."
+    />
+  </Target>
+
+  <ItemGroup
+    Condition="'$(TaiwuModSide)' == 'Frontend' Or '$(TaiwuModSide)' == 'Backend'"
+  >
     <PackageReference
       Include="ILRepack.Lib.MSBuild.Task"
       PrivateAssets="all"
+      ExcludeAssets="runtime"
       Condition="'$(InternalizeRuntimeDependencies)' != 'false'"
     />
     <PackageReference
       Include="Krafs.Publicizer"
       PrivateAssets="all"
+      ExcludeAssets="runtime"
       Condition="'$(UsePublicizer)' == 'true'"
     />
     <PackageReference

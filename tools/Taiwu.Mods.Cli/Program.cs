@@ -11,11 +11,17 @@ internal static partial class Program
 {
     private const string ModNameToken = "__ModName__";
     private const string MarkdownModNameToken = "{{ModName}}";
-    private const string DefaultTemplateRelativePath = "templates/mod";
+    private const string ProjectNameToken = "__ProjectName__";
+    private const string MarkdownProjectNameToken = "{{ProjectName}}";
+    private const string TargetFrameworkToken = "__TargetFramework__";
+    private const string DefaultModTemplateRelativePath = "templates/mod";
+    private const string DefaultSharedTemplateRelativePath = "templates/shared";
     private const string DefaultModsRelativePath = "mods";
+    private const string DefaultSharedRelativePath = "shared";
     private const string PluginsDirectoryName = "Plugins";
     private const string SolutionFileName = "Taiwu.Mods.slnx";
     private const string ModsSolutionFolderName = "/mods/";
+    private const string SharedSolutionFolderName = "/shared/";
 
     public static int Main(string[] args)
     {
@@ -64,28 +70,34 @@ internal static partial class Program
     {
         switch (options.Operation)
         {
-            case CliOperation.Create:
-                Create(options);
+            case CliOperation.CreateMod:
+                CreateMod(options);
                 break;
-            case CliOperation.Remove:
-                Remove(options);
+            case CliOperation.RemoveMod:
+                RemoveMod(options);
                 break;
-            case CliOperation.Pack:
-                Pack(options);
+            case CliOperation.PackMod:
+                PackMod(options);
+                break;
+            case CliOperation.CreateShared:
+                CreateSharedProject(options);
+                break;
+            case CliOperation.RemoveShared:
+                RemoveSharedProject(options);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(options));
         }
     }
 
-    private static void Create(CommandLineOptions options)
+    private static void CreateMod(CommandLineOptions options)
     {
-        ValidateModName(options.ModName);
+        ValidateNamespaceStyleIdentifier(options.Name, "ModName");
 
         string repoRoot = Path.GetFullPath(options.RepoRoot);
-        string templateRoot = Path.Combine(repoRoot, DefaultTemplateRelativePath);
+        string templateRoot = Path.Combine(repoRoot, DefaultModTemplateRelativePath);
         string modsRoot = Path.GetFullPath(options.ModsRoot ?? Path.Combine(repoRoot, DefaultModsRelativePath));
-        string modRoot = Path.Combine(modsRoot, options.ModName);
+        string modRoot = Path.Combine(modsRoot, options.Name);
 
         if (!Directory.Exists(templateRoot))
         {
@@ -97,23 +109,53 @@ internal static partial class Program
             throw new InvalidOperationException($"Mod directory already exists: {modRoot}. Pass --force to overwrite template files.");
         }
 
-        CopyTemplate(templateRoot, modRoot, options.ModName, options.Force);
+        CopyTemplate(templateRoot, modRoot, CreateModTemplateReplacements(options.Name), options.Force);
 
         if (!options.SkipSolution && IsUnderDirectory(modRoot, repoRoot))
         {
-            AddProjectsToSolution(repoRoot, options.ModName);
+            AddProjectsToSolution(repoRoot, GetModProjectFullPaths(modsRoot, options.Name));
         }
 
-        Console.WriteLine($"Created mod '{options.ModName}' at {modRoot}");
+        Console.WriteLine($"Created mod '{options.Name}' at {modRoot}");
     }
 
-    private static void CopyTemplate(string templateRoot, string modRoot, string modName, bool force)
+    private static void CreateSharedProject(CommandLineOptions options)
+    {
+        ValidateNamespaceStyleIdentifier(options.Name, "ProjectName");
+        SharedProjectSide side = ParseSharedProjectSide(options.SharedSide);
+
+        string repoRoot = Path.GetFullPath(options.RepoRoot);
+        string templateRoot = Path.Combine(repoRoot, DefaultSharedTemplateRelativePath);
+        string sharedRoot = Path.GetFullPath(options.SharedRoot ?? Path.Combine(repoRoot, DefaultSharedRelativePath));
+        string projectRoot = Path.Combine(sharedRoot, options.Name);
+
+        if (!Directory.Exists(templateRoot))
+        {
+            throw new DirectoryNotFoundException($"Template directory does not exist: {templateRoot}");
+        }
+
+        if (Directory.Exists(projectRoot) && !options.Force)
+        {
+            throw new InvalidOperationException($"Shared project directory already exists: {projectRoot}. Pass --force to overwrite template files.");
+        }
+
+        CopyTemplate(templateRoot, projectRoot, CreateSharedProjectTemplateReplacements(options.Name, side), options.Force);
+
+        if (!options.SkipSolution && IsUnderDirectory(projectRoot, repoRoot))
+        {
+            AddProjectsToSolution(repoRoot, [GetSharedProjectFullPath(sharedRoot, options.Name)]);
+        }
+
+        Console.WriteLine($"Created shared project '{options.Name}' at {projectRoot}");
+    }
+
+    private static void CopyTemplate(string templateRoot, string destinationRoot, IReadOnlyDictionary<string, string> replacements, bool force)
     {
         foreach (string templateFile in Directory.EnumerateFiles(templateRoot, "*", SearchOption.AllDirectories))
         {
             string relativePath = Path.GetRelativePath(templateRoot, templateFile);
-            string destinationRelativePath = ReplaceTokens(relativePath, modName);
-            string destinationPath = Path.Combine(modRoot, destinationRelativePath);
+            string destinationRelativePath = ReplaceTokens(relativePath, replacements);
+            string destinationPath = Path.Combine(destinationRoot, destinationRelativePath);
 
             if (File.Exists(destinationPath) && !force)
             {
@@ -129,7 +171,7 @@ internal static partial class Program
             if (ShouldReplaceTokens(templateFile))
             {
                 string content = File.ReadAllText(templateFile, Encoding.UTF8);
-                File.WriteAllText(destinationPath, ReplaceTokens(content, modName), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                File.WriteAllText(destinationPath, ReplaceTokens(content, replacements), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
                 continue;
             }
 
@@ -137,7 +179,7 @@ internal static partial class Program
         }
     }
 
-    private static void AddProjectsToSolution(string repoRoot, string modName)
+    private static void AddProjectsToSolution(string repoRoot, IEnumerable<string> fullProjectPaths)
     {
         string solutionPath = Path.Combine(repoRoot, SolutionFileName);
         if (!File.Exists(solutionPath))
@@ -145,26 +187,46 @@ internal static partial class Program
             throw new FileNotFoundException($"Solution file does not exist: {solutionPath}");
         }
 
-        string[] projectPaths = GetModProjectPaths(modName);
-        RunDotnet(repoRoot, "sln", SolutionFileName, "add", projectPaths[0], projectPaths[1]);
+        string[] projectPaths =
+        [
+            .. fullProjectPaths.Select(fullProjectPath => GetRepoRelativePath(repoRoot, fullProjectPath)),
+        ];
+
+        RunDotnet(repoRoot, ["sln", SolutionFileName, "add", .. projectPaths]);
+        EnsureStandardSolutionFolders(repoRoot);
     }
 
-    private static void Remove(CommandLineOptions options)
+    private static void RemoveMod(CommandLineOptions options)
     {
-        ValidateModName(options.ModName);
+        ValidateNamespaceStyleIdentifier(options.Name, "ModName");
 
         string repoRoot = Path.GetFullPath(options.RepoRoot);
+        string modsRoot = Path.GetFullPath(options.ModsRoot ?? Path.Combine(repoRoot, DefaultModsRelativePath));
+        RemoveProjectsFromSolution(repoRoot, "mod", options.Name, GetModProjectFullPaths(modsRoot, options.Name));
+    }
+
+    private static void RemoveSharedProject(CommandLineOptions options)
+    {
+        ValidateNamespaceStyleIdentifier(options.Name, "ProjectName");
+
+        string repoRoot = Path.GetFullPath(options.RepoRoot);
+        string sharedRoot = Path.GetFullPath(options.SharedRoot ?? Path.Combine(repoRoot, DefaultSharedRelativePath));
+        RemoveProjectsFromSolution(repoRoot, "shared project", options.Name, [GetSharedProjectFullPath(sharedRoot, options.Name)]);
+    }
+
+    private static void RemoveProjectsFromSolution(string repoRoot, string projectKind, string projectName, IEnumerable<string> fullProjectPaths)
+    {
         string solutionPath = Path.Combine(repoRoot, SolutionFileName);
         if (!File.Exists(solutionPath))
         {
             throw new FileNotFoundException($"Solution file does not exist: {solutionPath}");
         }
 
-        string[] projectPaths = GetModProjectPaths(options.ModName);
         List<string> existingProjectPaths = [];
-        foreach (string projectPath in projectPaths)
+        foreach (string fullProjectPath in fullProjectPaths)
         {
-            if (File.Exists(Path.Combine(repoRoot, projectPath)))
+            string projectPath = GetRepoRelativePath(repoRoot, fullProjectPath);
+            if (File.Exists(fullProjectPath))
             {
                 existingProjectPaths.Add(projectPath);
             }
@@ -176,31 +238,31 @@ internal static partial class Program
 
         if (existingProjectPaths.Count == 0)
         {
-            Console.WriteLine($"No solution projects found for mod '{options.ModName}'.");
+            Console.WriteLine($"No solution projects found for {projectKind} '{projectName}'.");
             return;
         }
 
         RunDotnet(repoRoot, ["sln", SolutionFileName, "remove", .. existingProjectPaths]);
-        EnsureSolutionFolder(repoRoot, ModsSolutionFolderName);
-        Console.WriteLine($"Removed mod '{options.ModName}' projects from {SolutionFileName}. Files were not deleted.");
+        EnsureStandardSolutionFolders(repoRoot);
+        Console.WriteLine($"Removed {projectKind} '{projectName}' projects from {SolutionFileName}. Files were not deleted.");
     }
 
-    private static void Pack(CommandLineOptions options)
+    private static void PackMod(CommandLineOptions options)
     {
-        ValidateModName(options.ModName);
+        ValidateNamespaceStyleIdentifier(options.Name, "ModName");
 
         string repoRoot = Path.GetFullPath(options.RepoRoot);
         string modsRoot = Path.GetFullPath(options.ModsRoot ?? Path.Combine(repoRoot, DefaultModsRelativePath));
         string artifactsRoot = Path.GetFullPath(options.ArtifactsRoot ?? Path.Combine(repoRoot, "artifacts", "mods"));
-        string modRoot = Path.Combine(modsRoot, options.ModName);
-        string packageRoot = Path.Combine(artifactsRoot, options.ModName);
+        string modRoot = Path.Combine(modsRoot, options.Name);
+        string packageRoot = Path.Combine(artifactsRoot, options.Name);
 
         if (!Directory.Exists(modRoot))
         {
             throw new DirectoryNotFoundException($"Mod directory does not exist: {modRoot}");
         }
 
-        string[] fullProjectPaths = GetModProjectFullPaths(modsRoot, options.ModName);
+        string[] fullProjectPaths = GetModProjectFullPaths(modsRoot, options.Name);
         foreach (string fullProjectPath in fullProjectPaths)
         {
             if (!File.Exists(fullProjectPath))
@@ -221,7 +283,7 @@ internal static partial class Program
 
         CopyPackageFiles(modRoot, packageRoot);
         CopyPluginOutputs(repoRoot, fullProjectPaths, options.Configuration, packageRoot);
-        Console.WriteLine($"Packed mod '{options.ModName}' to {packageRoot}");
+        Console.WriteLine($"Packed mod '{options.Name}' to {packageRoot}");
     }
 
     private static void CopyPackageFiles(string modRoot, string packageRoot)
@@ -335,18 +397,15 @@ internal static partial class Program
         File.WriteAllText(solutionPath, $"{document}{Environment.NewLine}", new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
     }
 
+    private static void EnsureStandardSolutionFolders(string repoRoot)
+    {
+        EnsureSolutionFolder(repoRoot, ModsSolutionFolderName);
+        EnsureSolutionFolder(repoRoot, SharedSolutionFolderName);
+    }
+
     private static bool ShouldReplaceTokens(string templateFile)
     {
         return TextTemplateExtensions.Contains(Path.GetExtension(templateFile));
-    }
-
-    private static string[] GetModProjectPaths(string modName)
-    {
-        return
-        [
-            $"{DefaultModsRelativePath}/{modName}/src/Frontend/{modName}.Frontend.csproj",
-            $"{DefaultModsRelativePath}/{modName}/src/Backend/{modName}.Backend.csproj",
-        ];
     }
 
     private static string[] GetModProjectFullPaths(string modsRoot, string modName)
@@ -356,6 +415,11 @@ internal static partial class Program
             Path.Combine(modsRoot, modName, "src", "Frontend", $"{modName}.Frontend.csproj"),
             Path.Combine(modsRoot, modName, "src", "Backend", $"{modName}.Backend.csproj"),
         ];
+    }
+
+    private static string GetSharedProjectFullPath(string sharedRoot, string projectName)
+    {
+        return Path.Combine(sharedRoot, projectName, $"{projectName}.csproj");
     }
 
     private static void RunDotnet(string workingDirectory, params string[] arguments)
@@ -433,32 +497,89 @@ internal static partial class Program
         return standardOutput.Trim();
     }
 
-    private static string ReplaceTokens(string value, string modName)
+    private static Dictionary<string, string> CreateModTemplateReplacements(string modName)
     {
-        return value
-            .Replace(ModNameToken, modName, StringComparison.Ordinal)
-            .Replace(MarkdownModNameToken, modName, StringComparison.Ordinal);
+        return new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            [ModNameToken] = modName,
+            [MarkdownModNameToken] = modName,
+        };
     }
 
-    private static void ValidateModName(string modName)
+    private static Dictionary<string, string> CreateSharedProjectTemplateReplacements(string projectName, SharedProjectSide side)
     {
-        if (string.IsNullOrWhiteSpace(modName))
+        return new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            throw new ArgumentException("Mod name cannot be empty.");
+            [ProjectNameToken] = projectName,
+            [MarkdownProjectNameToken] = projectName,
+            [TargetFrameworkToken] = GetDefaultSharedProjectTargetFramework(side),
+        };
+    }
+
+    private static string ReplaceTokens(string value, IReadOnlyDictionary<string, string> replacements)
+    {
+        string result = value;
+        foreach (KeyValuePair<string, string> replacement in replacements)
+        {
+            result = result.Replace(replacement.Key, replacement.Value, StringComparison.Ordinal);
         }
 
-        if (!ModNameRegex().IsMatch(modName))
+        return result;
+    }
+
+    private static void ValidateNamespaceStyleIdentifier(string value, string valueName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentException("ModName must be a C# namespace-style identifier, for example MyMod or MyCompany.MyMod.");
+            throw new ArgumentException($"{valueName} cannot be empty.");
         }
 
-        foreach (string segment in modName.Split('.'))
+        if (!NamespaceStyleIdentifierRegex().IsMatch(value))
+        {
+            throw new ArgumentException($"{valueName} must be a C# namespace-style identifier, for example MyMod or MyCompany.MyMod.");
+        }
+
+        foreach (string segment in value.Split('.'))
         {
             if (CSharpKeywords.Contains(segment))
             {
-                throw new ArgumentException($"ModName segment '{segment}' is a C# keyword.");
+                throw new ArgumentException($"{valueName} segment '{segment}' is a C# keyword.");
             }
         }
+    }
+
+    private static SharedProjectSide ParseSharedProjectSide(string value)
+    {
+        foreach (SharedProjectSide side in Enum.GetValues<SharedProjectSide>())
+        {
+            if (string.Equals(value, side.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                return side;
+            }
+        }
+
+        throw new ArgumentException("Shared project side must be Shared, Frontend, or Backend.");
+    }
+
+    private static string GetDefaultSharedProjectTargetFramework(SharedProjectSide side)
+    {
+        return side switch
+        {
+            SharedProjectSide.Shared => "netstandard2.1",
+            SharedProjectSide.Frontend => "netstandard2.1",
+            SharedProjectSide.Backend => "net6.0",
+            _ => throw new ArgumentOutOfRangeException(nameof(side)),
+        };
+    }
+
+    private static string GetRepoRelativePath(string repoRoot, string fullPath)
+    {
+        if (!IsUnderDirectory(fullPath, repoRoot))
+        {
+            throw new InvalidOperationException($"Project path is outside repository root: {fullPath}");
+        }
+
+        return Path.GetRelativePath(repoRoot, fullPath).Replace(Path.DirectorySeparatorChar, '/');
     }
 
     private static bool IsUnderDirectory(string path, string directory)
@@ -469,7 +590,7 @@ internal static partial class Program
     }
 
     [GeneratedRegex(@"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")]
-    private static partial Regex ModNameRegex();
+    private static partial Regex NamespaceStyleIdentifierRegex();
 
     private static readonly HashSet<string> TextTemplateExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -575,4 +696,11 @@ internal static partial class Program
         "volatile",
         "while",
     };
+}
+
+internal enum SharedProjectSide
+{
+    Shared = 0,
+    Frontend = 1,
+    Backend = 2,
 }

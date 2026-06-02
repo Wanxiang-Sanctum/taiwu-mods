@@ -64,14 +64,10 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack --name {{ModName}}
 </ItemGroup>
 ```
 
-需要访问游戏 DLL 的非 public API 时，先启用 Publicizer，再自行声明要公开化的程序集、
-类型或成员：
+mod 项目默认启用 build-time Publicizer 包，但不默认公开任何程序集或成员。需要访问游戏
+DLL 的非 public API 时，自行声明要公开化的程序集、类型或成员：
 
 ```xml
-<PropertyGroup>
-  <UsePublicizer>true</UsePublicizer>
-</PropertyGroup>
-
 <ItemGroup>
   <Publicize
     Include="Assembly-CSharp"
@@ -79,6 +75,14 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack --name {{ModName}}
     IncludeVirtualMembers="false"
   />
 </ItemGroup>
+```
+
+需要关闭默认 Publicizer 包时，可以在 `Taiwu.Mod.props` 中设置：
+
+```xml
+<PropertyGroup>
+  <UsePublicizer>false</UsePublicizer>
+</PropertyGroup>
 ```
 
 前端常用 `Assembly-CSharp`，后端常用 `GameData`。如果只需要具体类型或成员，优先写更窄的

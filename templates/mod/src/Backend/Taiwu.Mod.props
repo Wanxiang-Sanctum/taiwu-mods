@@ -4,10 +4,6 @@
   </PropertyGroup>
 
   <!--
-  <PropertyGroup>
-    <UsePublicizer>true</UsePublicizer>
-  </PropertyGroup>
-
   <ItemGroup>
     <Publicize
       Include="GameData"
