@@ -46,8 +46,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack --name {{ModName}}
 ## 依赖内部化和 Publicizer
 
 构建默认会把需要随插件输出的 DLL 合并进插件主 DLL，并对这些输入程序集做内部化和重命名。
-这些依赖是在处理后成为插件 DLL 内部的私有实现；只作为编译期引用的太吾游戏 DLL 不会被
-合并。
+这些依赖在处理后成为插件 DLL 内部的私有实现；作为编译期引用的太吾游戏 DLL 保持为编译输入，
+不进入合并流程。
 
 ```xml
 <PropertyGroup>
