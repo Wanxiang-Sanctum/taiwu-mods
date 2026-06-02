@@ -1,8 +1,6 @@
 <Project>
   <PropertyGroup>
     <DprintCommand>mise exec -- dprint</DprintCommand>
-    <ModCreatorProject
-    >tools/Taiwu.Mods.ModCreator/Taiwu.Mods.ModCreator.csproj</ModCreatorProject>
   </PropertyGroup>
 
   <Target Name="Check">
@@ -15,61 +13,5 @@
 
   <Target Name="InstallTools">
     <Exec Command="mise install" />
-  </Target>
-
-  <Target Name="NewMod">
-    <Error
-      Condition="'$(ModName)' == ''"
-      Text="Missing required property: ModName. Example: dotnet msbuild repo.proj -t:NewMod -p:ModName=MyMod"
-    />
-    <PropertyGroup>
-      <Force Condition="'$(Force)' == ''">false</Force>
-      <EffectiveModsRoot Condition="'$(ModsRoot)' == ''"
-      >$(MSBuildThisFileDirectory)mods</EffectiveModsRoot>
-      <EffectiveModsRoot Condition="'$(ModsRoot)' != ''"
-      >$(ModsRoot)</EffectiveModsRoot>
-      <SkipSolution>false</SkipSolution>
-      <SkipSolution
-        Condition="'$(AddToSolution)' == 'false' Or '$(AddToSolution)' == 'False'"
-      >true</SkipSolution>
-    </PropertyGroup>
-    <Exec
-      WorkingDirectory="$(MSBuildThisFileDirectory)"
-      Command="dotnet run --project &quot;$(ModCreatorProject)&quot; -- --operation create --repo-root &quot;$(MSBuildThisFileDirectory)&quot; --mods-root &quot;$(EffectiveModsRoot)&quot; --name &quot;$(ModName)&quot; --force &quot;$(Force)&quot; --skip-solution &quot;$(SkipSolution)&quot;"
-    />
-  </Target>
-
-  <Target Name="RemoveMod">
-    <Error
-      Condition="'$(ModName)' == ''"
-      Text="Missing required property: ModName. Example: dotnet msbuild repo.proj -t:RemoveMod -p:ModName=MyMod"
-    />
-    <Exec
-      WorkingDirectory="$(MSBuildThisFileDirectory)"
-      Command="dotnet run --project &quot;$(ModCreatorProject)&quot; -- --operation remove --repo-root &quot;$(MSBuildThisFileDirectory)&quot; --name &quot;$(ModName)&quot;"
-    />
-  </Target>
-
-  <Target Name="PackMod">
-    <Error
-      Condition="'$(ModName)' == ''"
-      Text="Missing required property: ModName. Example: dotnet msbuild repo.proj -t:PackMod -p:ModName=MyMod"
-    />
-    <PropertyGroup>
-      <Configuration Condition="'$(Configuration)' == ''"
-      >Release</Configuration>
-      <EffectiveModsRoot Condition="'$(ModsRoot)' == ''"
-      >$(MSBuildThisFileDirectory)mods</EffectiveModsRoot>
-      <EffectiveModsRoot Condition="'$(ModsRoot)' != ''"
-      >$(ModsRoot)</EffectiveModsRoot>
-      <EffectiveArtifactsRoot Condition="'$(ArtifactsRoot)' == ''"
-      >$(MSBuildThisFileDirectory)artifacts/mods</EffectiveArtifactsRoot>
-      <EffectiveArtifactsRoot Condition="'$(ArtifactsRoot)' != ''"
-      >$(ArtifactsRoot)</EffectiveArtifactsRoot>
-    </PropertyGroup>
-    <Exec
-      WorkingDirectory="$(MSBuildThisFileDirectory)"
-      Command="dotnet run --project &quot;$(ModCreatorProject)&quot; -- --operation pack --repo-root &quot;$(MSBuildThisFileDirectory)&quot; --mods-root &quot;$(EffectiveModsRoot)&quot; --artifacts-root &quot;$(EffectiveArtifactsRoot)&quot; --configuration &quot;$(Configuration)&quot; --name &quot;$(ModName)&quot;"
-    />
   </Target>
 </Project>

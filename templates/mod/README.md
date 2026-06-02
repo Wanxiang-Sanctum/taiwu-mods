@@ -28,10 +28,10 @@ dotnet build mods/{{ModName}}/src/Backend/{{ModName}}.Backend.csproj
 打包可部署目录：
 
 ```powershell
-dotnet msbuild repo.proj -t:PackMod -p:ModName={{ModName}}
+dotnet run --project tools/Taiwu.Mods.Cli -- pack --name {{ModName}}
 ```
 
-`PackMod` 会把 `Config.Lua` 和插件 DLL 组装到仓库根目录的
+`pack` 会把 `Config.Lua` 和插件 DLL 组装到仓库根目录的
 `artifacts/mods/{{ModName}}/`。
 
 项目结构：

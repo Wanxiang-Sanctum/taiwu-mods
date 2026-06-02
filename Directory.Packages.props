@@ -14,6 +14,7 @@
       Include="Roslynator.Formatting.Analyzers"
       Version="$(RoslynatorVersion)"
     />
+    <PackageVersion Include="System.CommandLine" Version="2.0.8" />
     <PackageVersion
       Include="Taiwu.ModKit.References.Plugin"
       Version="$(TaiwuModKitReferencesVersion)"

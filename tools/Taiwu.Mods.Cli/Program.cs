@@ -1,10 +1,11 @@
 using System.ComponentModel;
+using System.CommandLine;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace Taiwu.Mods.ModCreator;
+namespace Taiwu.Mods.Cli;
 
 internal static partial class Program
 {
@@ -20,9 +21,8 @@ internal static partial class Program
     {
         try
         {
-            ModCreatorOptions options = ModCreatorOptions.Parse(args);
-            Run(options);
-            return 0;
+            Command command = CommandLineOptions.CreateCommand(Run);
+            return command.Parse(args).Invoke(CreateInvocationConfiguration());
         }
         catch (ArgumentException ex)
         {
@@ -46,31 +46,39 @@ internal static partial class Program
         }
     }
 
+    private static InvocationConfiguration CreateInvocationConfiguration()
+    {
+        return new InvocationConfiguration
+        {
+            EnableDefaultExceptionHandler = false,
+        };
+    }
+
     private static int ReportError(Exception ex)
     {
         Console.Error.WriteLine($"error: {ex.Message}");
         return 1;
     }
 
-    private static void Run(ModCreatorOptions options)
+    private static void Run(CommandLineOptions options)
     {
         switch (options.Operation)
         {
-            case ModCreatorOperation.Create:
-                CreateMod(options);
+            case CliOperation.Create:
+                Create(options);
                 break;
-            case ModCreatorOperation.Remove:
-                RemoveMod(options);
+            case CliOperation.Remove:
+                Remove(options);
                 break;
-            case ModCreatorOperation.Pack:
-                PackMod(options);
+            case CliOperation.Pack:
+                Pack(options);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(options));
         }
     }
 
-    private static void CreateMod(ModCreatorOptions options)
+    private static void Create(CommandLineOptions options)
     {
         ValidateModName(options.ModName);
 
@@ -86,7 +94,7 @@ internal static partial class Program
 
         if (Directory.Exists(modRoot) && !options.Force)
         {
-            throw new InvalidOperationException($"Mod directory already exists: {modRoot}. Pass -p:Force=true to overwrite template files.");
+            throw new InvalidOperationException($"Mod directory already exists: {modRoot}. Pass --force to overwrite template files.");
         }
 
         CopyTemplate(templateRoot, modRoot, options.ModName, options.Force);
@@ -141,7 +149,7 @@ internal static partial class Program
         RunDotnet(repoRoot, "sln", SolutionFileName, "add", projectPaths[0], projectPaths[1]);
     }
 
-    private static void RemoveMod(ModCreatorOptions options)
+    private static void Remove(CommandLineOptions options)
     {
         ValidateModName(options.ModName);
 
@@ -177,7 +185,7 @@ internal static partial class Program
         Console.WriteLine($"Removed mod '{options.ModName}' projects from {SolutionFileName}. Files were not deleted.");
     }
 
-    private static void PackMod(ModCreatorOptions options)
+    private static void Pack(CommandLineOptions options)
     {
         ValidateModName(options.ModName);
 
