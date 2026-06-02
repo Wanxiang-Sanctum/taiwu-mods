@@ -10,4 +10,4 @@
 dotnet build shared/{{ProjectName}}/{{ProjectName}}.csproj
 ```
 
-特殊目标框架、Taiwu 引用和 Publicizer 设置写在 `.csproj`。
+目标框架、Taiwu 引用和 Publicizer 设置写在 `.csproj`。
