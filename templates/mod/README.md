@@ -42,3 +42,44 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack --name {{ModName}}
 
 前后端项目默认引用 `Taiwu.ModKit.References.Plugin`。需要访问更宽的游戏 API
 时，再按实际代码需要添加对应引用包。
+
+## 依赖内部化和 Publicizer
+
+构建默认会把需要随插件输出的 DLL 合并进插件主 DLL，并对这些输入程序集做内部化和重命名。
+这些依赖是在处理后成为插件 DLL 内部的私有实现；只作为编译期引用的太吾游戏 DLL 不会被
+合并。
+
+```xml
+<PropertyGroup>
+  <InternalizeRuntimeDependencies>false</InternalizeRuntimeDependencies>
+</PropertyGroup>
+```
+
+上面的配置可以关闭默认内部化。需要让某个会被合并的 DLL 保持为独立文件时，在
+`Taiwu.Mod.props` 中排除对应程序集文件名，不带 `.dll`：
+
+```xml
+<ItemGroup>
+  <KeepDependencySeparate Include="Your.Dependency.AssemblyName" />
+</ItemGroup>
+```
+
+需要访问游戏 DLL 的非 public API 时，先启用 Publicizer，再自行声明要公开化的程序集、
+类型或成员：
+
+```xml
+<PropertyGroup>
+  <UsePublicizer>true</UsePublicizer>
+</PropertyGroup>
+
+<ItemGroup>
+  <Publicize
+    Include="Assembly-CSharp"
+    IncludeCompilerGeneratedMembers="false"
+    IncludeVirtualMembers="false"
+  />
+</ItemGroup>
+```
+
+前端常用 `Assembly-CSharp`，后端常用 `GameData`。如果只需要具体类型或成员，优先写更窄的
+`Publicize Include`。

@@ -2,4 +2,24 @@
   <PropertyGroup>
     <TaiwuModSide>Frontend</TaiwuModSide>
   </PropertyGroup>
+
+  <!--
+  <PropertyGroup>
+    <UsePublicizer>true</UsePublicizer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Publicize
+      Include="Assembly-CSharp"
+      IncludeCompilerGeneratedMembers="false"
+      IncludeVirtualMembers="false"
+    />
+  </ItemGroup>
+  -->
+
+  <!--
+  <PropertyGroup>
+    <InternalizeRuntimeDependencies>false</InternalizeRuntimeDependencies>
+  </PropertyGroup>
+  -->
 </Project>

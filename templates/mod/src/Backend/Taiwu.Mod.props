@@ -2,4 +2,24 @@
   <PropertyGroup>
     <TaiwuModSide>Backend</TaiwuModSide>
   </PropertyGroup>
+
+  <!--
+  <PropertyGroup>
+    <UsePublicizer>true</UsePublicizer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Publicize
+      Include="GameData"
+      IncludeCompilerGeneratedMembers="false"
+      IncludeVirtualMembers="false"
+    />
+  </ItemGroup>
+  -->
+
+  <!--
+  <PropertyGroup>
+    <InternalizeRuntimeDependencies>false</InternalizeRuntimeDependencies>
+  </PropertyGroup>
+  -->
 </Project>
