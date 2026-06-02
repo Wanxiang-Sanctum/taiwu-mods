@@ -4,17 +4,9 @@
 
 从 GitHub 模板创建自己的仓库后，在 `mods/` 下维护一个或多个 mod，在 `shared/`
 下维护可被多个 mod 引用的内部共享项目。仓库命令行工具是 `tools/Taiwu.Mods.Cli/`：
-新增 mod、内部共享项目、取消解决方案注册和打包可部署目录都通过它执行。`repo.proj`
-提供安装本地工具、检查和格式化命令。
+新增 mod、内部共享项目、取消解决方案注册和打包可部署目录都通过它执行。
 
 ## 开始
-
-首次进入仓库：
-
-```powershell
-mise trust
-dotnet msbuild repo.proj -t:InstallTools
-```
 
 创建一个 mod：
 
@@ -40,12 +32,12 @@ dotnet run --project tools/Taiwu.Mods.Cli -- create-shared --name MyCompany.Taiw
 dotnet run --project tools/Taiwu.Mods.Cli -- create-shared --name MyCompany.Taiwu.BackendSupport --side Backend
 ```
 
-## 常用命令
+## 项目命令
+
+构建解决方案：
 
 ```powershell
 dotnet build Taiwu.Mods.slnx
-dotnet msbuild repo.proj -t:Check
-dotnet msbuild repo.proj -t:Format
 ```
 
 打包可部署目录：
@@ -69,16 +61,33 @@ dotnet run --project tools/Taiwu.Mods.Cli -- remove-mod --name MyMod
 dotnet run --project tools/Taiwu.Mods.Cli -- remove-shared --name MyCompany.Taiwu.Shared
 ```
 
+## 仓库维护
+
+检查和格式化仓库文件：
+
+```powershell
+dotnet msbuild repo.proj -t:Check
+dotnet msbuild repo.proj -t:Format
+```
+
+首次运行这些命令前执行：
+
+```powershell
+mise trust
+dotnet msbuild repo.proj -t:InstallTools
+```
+
 ## 仓库结构
 
-常用目录和配置入口如下。
+常用目录和文件如下。
 
-- `tools/Taiwu.Mods.Cli/`：创建、取消解决方案注册和打包 mod 的命令行工具。
+- `tools/Taiwu.Mods.Cli/`：创建 mod、内部共享项目、取消解决方案注册和打包可部署目录的命令行工具。
 - `mods/`：实际 mod 源码目录。前后端插件项目、Taiwu 引用、Publicizer 和依赖内部化约定见
   `mods/README.md`。
 - `shared/`：内部共享项目目录。共享边界、目标框架和项目级配置入口见 `shared/README.md`。
 - `templates/mod/`、`templates/shared/`：命令行工具创建项目时使用的模板。
 - `repo.proj`：安装本地工具、检查和格式化命令。
+- `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 mod 项目和内部共享项目。
 - `Directory.Build.props`：仓库级编译、分析器和代码质量规则。
 - `Directory.Packages.props`：NuGet 包版本。
 - `NuGet.config`：NuGet 包源和包源映射。
