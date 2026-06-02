@@ -20,7 +20,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name {{ModName}}
 `pack-mod` 会把 `Config.Lua` 和插件 DLL 组装到仓库根目录的
 `artifacts/mods/{{ModName}}/`。
 
-特殊构建设置写在对应项目的 `Taiwu.Mod.props`；只在偏离仓库默认约定时说明。
+特殊构建设置写在对应项目的 `Taiwu.Mod.props`。
 
 ## 项目结构
 
