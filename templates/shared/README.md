@@ -14,7 +14,7 @@
 dotnet build shared/{{ProjectName}}/{{ProjectName}}.csproj
 ```
 
-这个项目用于被 `mods/` 下的插件项目引用，不会被 `pack` 命令直接打包成可部署 mod。
+这个项目用于被 `mods/` 下的插件项目引用，不会被 `pack-mod` 命令直接打包成可部署 mod。
 
 ## Taiwu 引用和 Publicizer
 

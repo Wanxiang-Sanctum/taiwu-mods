@@ -50,7 +50,7 @@ internal sealed class CommandLineOptions
         Option<string?> modsRootOption = CreateModsRootOption();
         Option<bool> forceOption = CreateForceOption();
         Option<bool> skipSolutionOption = CreateSkipSolutionOption();
-        Command command = new("create", "复制 mod 模板并把项目注册到解决方案。");
+        Command command = new("create-mod", "复制 mod 模板并把项目注册到解决方案。");
 
         command.Options.Add(nameOption);
         command.Options.Add(repoRootOption);
@@ -77,7 +77,7 @@ internal sealed class CommandLineOptions
         Option<string> nameOption = CreateNameOption("Mod 名称。", "ModName");
         Option<string> repoRootOption = CreateRepoRootOption();
         Option<string?> modsRootOption = CreateModsRootOption();
-        Command command = new("remove", "从解决方案取消注册指定 mod，保留文件。");
+        Command command = new("remove-mod", "从解决方案取消注册指定 mod，保留文件。");
 
         command.Options.Add(nameOption);
         command.Options.Add(repoRootOption);
@@ -102,7 +102,7 @@ internal sealed class CommandLineOptions
         Option<string?> modsRootOption = CreateModsRootOption();
         Option<string?> artifactsRootOption = CreateArtifactsRootOption();
         Option<string> configurationOption = CreateConfigurationOption();
-        Command command = new("pack", "构建并组装指定 mod 的可部署目录。");
+        Command command = new("pack-mod", "构建并组装指定 mod 的可部署目录。");
 
         command.Options.Add(nameOption);
         command.Options.Add(repoRootOption);

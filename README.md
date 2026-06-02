@@ -19,7 +19,7 @@ dotnet msbuild repo.proj -t:InstallTools
 创建一个 mod：
 
 ```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- create --name MyMod
+dotnet run --project tools/Taiwu.Mods.Cli -- create-mod --name MyMod
 ```
 
 `ModName` 必须是 C# 命名空间风格的标识符，例如 `MyMod` 或
@@ -52,16 +52,16 @@ dotnet msbuild repo.proj -t:Format
 打包可部署目录：
 
 ```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- pack --name MyMod
+dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 ```
 
-`pack` 默认使用 `Release` 构建前后端项目，并把 `Config.Lua` 和插件 DLL
+`pack-mod` 默认使用 `Release` 构建前后端项目，并把 `Config.Lua` 和插件 DLL
 组装到 `artifacts/mods/MyMod/`。这个目录可直接替换游戏内对应 mod 目录，也可作为后续分发归档的输入。
 
 从解决方案取消注册某个 mod，但保留文件：
 
 ```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- remove --name MyMod
+dotnet run --project tools/Taiwu.Mods.Cli -- remove-mod --name MyMod
 ```
 
 从解决方案取消注册某个内部共享项目，但保留文件：
@@ -94,7 +94,7 @@ mods/MyMod/
 `mods/Directory.Build.props` 统一设置。
 
 普通 `dotnet build` 使用 SDK 默认的 `bin/` 和 `obj/` 输出目录；完整 mod 目录由
-`tools/Taiwu.Mods.Cli` 的 `pack` 命令生成，用于部署或测试。
+`tools/Taiwu.Mods.Cli` 的 `pack-mod` 命令生成，用于部署或测试。
 
 前后端项目默认引用 `Taiwu.ModKit.References.Plugin`。需要访问更宽的游戏 API
 时，再按实际代码需要添加 `Taiwu.ModKit.References.Frontend` 或
@@ -110,7 +110,7 @@ shared/MyCompany.Taiwu.Shared/
   MyCompany.Taiwu.Shared.csproj
 ```
 
-`shared/` 下每个一级子目录是一个内部项目。它们不是游戏可部署 mod，不参与 `pack` 输出，也
+`shared/` 下每个一级子目录是一个内部项目。它们不是游戏可部署 mod，不参与 `pack-mod` 输出，也
 不默认执行 ILRepack 内部化。共享项目应承载可复用抽象、通用实现或对游戏 API 的窄封装；
 最终由 `mods/` 下的插件项目引用并随插件构建产出。
 
@@ -181,11 +181,11 @@ mod 项目默认启用 build-time Publicizer 包，但模板不默认公开任�
 
 ## 仓库边界
 
-- `tools/Taiwu.Mods.Cli/`：mod 生命周期命令入口，负责创建、取消解决方案注册和打包。
+- `tools/Taiwu.Mods.Cli/`：仓库项目生命周期命令入口，负责创建、取消解决方案注册和打包。
 - `repo.proj`：安装本地工具、检查和格式化等仓库维护 target。
 - `mods/`：mod 源码目录。每个一级子目录是一个独立 mod。
 - `shared/`：内部共享项目目录。每个一级子目录是一个可被多个 mod 引用的内部库。
-- `templates/mod/`：`create` 的生成输入，维护源码骨架；具体 mod 开发在 `mods/<ModName>/`。
+- `templates/mod/`：`create-mod` 的生成输入，维护源码骨架；具体 mod 开发在 `mods/<ModName>/`。
 - `templates/shared/`：`create-shared` 的生成输入，维护内部共享项目骨架。
 - `Directory.Build.props`：仓库级 C# 编译、分析器和代码质量规则。
 - `mods/Directory.Build.props`：mod 项目共享约定，包括插件端侧、基础引用和 ILRepack 设置。
