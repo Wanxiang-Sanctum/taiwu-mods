@@ -20,7 +20,7 @@ shared/MyCompany.Taiwu.Shared/
 ```
 
 共享项目的目标框架、Taiwu 引用和 Publicizer 配置写在项目自己的 `.csproj` 中。默认 `Shared`
-和 `Frontend` 项目目标框架为 `netstandard2.1`，`Backend` 项目目标框架为 `net6.0`。纯共享抽象
+和 `Frontend` 项目目标框架为 `netstandard2.1`，`Backend` 项目目标框架为 `net8.0`。纯共享抽象
 或通用实现可以保持为普通 C# class library。
 
 需要访问游戏 API 时，再按实际代码需要添加 `Taiwu.ModKit.References.Frontend` 或

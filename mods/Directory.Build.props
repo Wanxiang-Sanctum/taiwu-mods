@@ -11,7 +11,7 @@
     >netstandard2.1</TargetFramework>
     <TargetFramework
       Condition="'$(TargetFramework)' == '' And '$(TaiwuModSide)' == 'Backend'"
-    >net6.0</TargetFramework>
+    >net8.0</TargetFramework>
     <AssemblyName Condition="'$(AssemblyName)' == ''"
     >$(MSBuildProjectName)</AssemblyName>
     <RootNamespace Condition="'$(RootNamespace)' == ''"

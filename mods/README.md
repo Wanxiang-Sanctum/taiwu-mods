@@ -20,7 +20,7 @@ mods/MyMod/
 ```
 
 每个插件项目通过项目旁的 `Taiwu.Mod.props` 标记端侧。前端项目默认目标框架为
-`netstandard2.1`，后端项目默认目标框架为 `net6.0`；这两个默认值由
+`netstandard2.1`，后端项目默认目标框架为 `net8.0`；这两个默认值由
 `mods/Directory.Build.props` 根据端侧设置。
 
 打包可部署目录：

@@ -567,7 +567,7 @@ internal static partial class Program
         {
             SharedProjectSide.Shared => "netstandard2.1",
             SharedProjectSide.Frontend => "netstandard2.1",
-            SharedProjectSide.Backend => "net6.0",
+            SharedProjectSide.Backend => "net8.0",
             _ => throw new ArgumentOutOfRangeException(nameof(side)),
         };
     }

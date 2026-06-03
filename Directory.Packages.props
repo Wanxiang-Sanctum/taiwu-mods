@@ -4,7 +4,7 @@
     <ILRepackVersion>2.0.45</ILRepackVersion>
     <KrafsPublicizerVersion>2.3.0</KrafsPublicizerVersion>
     <RoslynatorVersion>4.15.0</RoslynatorVersion>
-    <TaiwuModKitReferencesVersion>0.84.32-test</TaiwuModKitReferencesVersion>
+    <TaiwuModKitReferencesVersion>0.84.46-test</TaiwuModKitReferencesVersion>
   </PropertyGroup>
 
   <ItemGroup>
