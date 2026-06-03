@@ -34,6 +34,23 @@ dotnet run --project tools/Taiwu.Mods.Cli -- create-shared --name MyCompany.Taiw
 
 ## 项目命令
 
+恢复解决方案依赖：
+
+```powershell
+dotnet restore Taiwu.Mods.slnx
+```
+
+刚从模板创建且尚未注册任何 mod 时，这个命令只恢复 `tools/Taiwu.Mods.Cli/`，不需要 GitHub
+token。如果解决方案里已有 mod 项目，恢复过程会下载 GitHub Packages 上的 `Taiwu.ModKit.*`
+游戏引用包；这时需要准备一个有 `read:packages` 权限的 GitHub classic personal access token，
+并在当前 PowerShell 会话中提供给 NuGet：
+
+```powershell
+$env:TAIWU_MODKIT_GITHUB_USER = "<GitHubUser>"
+$env:TAIWU_MODKIT_GITHUB_TOKEN = "<GitHubToken>"
+dotnet restore Taiwu.Mods.slnx
+```
+
 构建解决方案：
 
 ```powershell
@@ -90,4 +107,4 @@ dotnet msbuild repo.proj -t:InstallTools
 - `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 mod 项目和内部共享项目。
 - `Directory.Build.props`：仓库级编译、分析器和代码质量规则。
 - `Directory.Packages.props`：NuGet 包版本。
-- `NuGet.config`：NuGet 包源和包源映射。
+- `NuGet.config`：NuGet 包源、包源映射，以及从环境变量读取 GitHub Packages 凭据的配置。
