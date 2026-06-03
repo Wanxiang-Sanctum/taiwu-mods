@@ -45,6 +45,9 @@
       />
       <_ILRepackInput Include="$(TargetPath)" />
       <_ILRepackInput Include="@(_AssemblyToBundle)" />
+      <_BundledAssemblyCopy
+        Include="@(_AssemblyToBundle->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)')"
+      />
     </ItemGroup>
 
     <Message
@@ -65,6 +68,10 @@
       TargetKind="SameAsPrimaryAssembly"
       KeyFile="$(KeyFile)"
       OutputFile="$(TargetPath)"
+    />
+    <Delete
+      Files="@(_BundledAssemblyCopy)"
+      Condition="'@(_AssemblyToBundle)' != ''"
     />
   </Target>
 </Project>

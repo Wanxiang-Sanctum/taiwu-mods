@@ -37,8 +37,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 插件项目默认引用 `Taiwu.ModKit.References.Plugin`。需要访问更宽的游戏 API 时，再按实际代码需要
 添加 `Taiwu.ModKit.References.Frontend` 或 `Taiwu.ModKit.References.Backend` 等引用包。
 
-插件项目默认引入 build-time Publicizer 包。需要在编译期访问游戏 DLL 的非 public API 时，在
-`Taiwu.Mod.props` 中声明要公开化的依赖和成员；声明 `Publicize` 项后才会 publicize 游戏 DLL。
+插件项目默认具备编译期 Publicizer 支持，但不会自动公开化游戏 DLL。需要在编译期访问游戏 DLL
+的非 public API 时，在 `Taiwu.Mod.props` 中声明具体 `Publicize` 项；只声明实际需要的程序集、类型或成员。
 
 ```xml
 <ItemGroup>
@@ -50,7 +50,10 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 </ItemGroup>
 ```
 
-需要关闭默认 Publicizer 包时，可以在 `Taiwu.Mod.props` 中设置：
+前端通常从 `Assembly-CSharp` 开始，后端通常从 `GameData` 开始；如果只需要具体类型或成员，优先写
+更窄的 `Publicize Include`。Publicizer 运行时策略由仓库按端侧固定选择，不作为普通 mod 配置入口。
+
+需要关闭默认 Publicizer 支持时，可以在 `Taiwu.Mod.props` 中设置：
 
 ```xml
 <PropertyGroup>
@@ -58,13 +61,11 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 </PropertyGroup>
 ```
 
-前端通常从 `Assembly-CSharp` 开始，后端通常从 `GameData` 开始；如果只需要具体类型或成员，优先写
-更窄的 `Publicize Include`。
-
 ## 依赖内部化
 
 插件项目默认使用 `ILRepack.Lib.MSBuild.Task` 把 runtime/copy-local DLL 合并进插件主 DLL，并对
-这些输入程序集做内部化和重命名，降低不同 mod 携带同名依赖时的冲突风险。
+这些输入程序集做内部化和重命名，降低不同 mod 携带同名依赖时的冲突风险。被合并的 DLL 会从插件
+输出目录中移除；默认打包结果只需要插件主 DLL。
 
 进入 NuGet `ref/` 目录的编译期引用，以及标记为 `CopyLocal=false` 的引用，保持为编译输入。
 太吾游戏引用包因此会保留为外部游戏依赖。
@@ -75,8 +76,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 </PropertyGroup>
 ```
 
-上面的配置可以关闭默认内部化。需要让某个 runtime/copy-local DLL 保持为独立文件时，在
-`Taiwu.Mod.props` 中排除对应程序集文件名，不带 `.dll`：
+上面的配置可以关闭默认内部化。如果某个 runtime/copy-local DLL 需要保持为独立文件并随插件部署，
+在 `Taiwu.Mod.props` 中排除对应程序集文件名，不带 `.dll`：
 
 ```xml
 <ItemGroup>
