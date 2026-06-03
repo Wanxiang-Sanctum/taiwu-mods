@@ -10,10 +10,12 @@ namespace Taiwu.Mods.Cli;
 internal static partial class Program
 {
     private const string ModNameToken = "__ModName__";
+    private const string ModVersionToken = "__ModVersion__";
     private const string MarkdownModNameToken = "{{ModName}}";
     private const string ProjectNameToken = "__ProjectName__";
     private const string MarkdownProjectNameToken = "{{ProjectName}}";
     private const string TargetFrameworkToken = "__TargetFramework__";
+    private const string DefaultModVersion = "0.0.0";
     private const string DefaultModTemplateRelativePath = "templates/mod";
     private const string DefaultSharedTemplateRelativePath = "templates/shared";
     private const string DefaultModsRelativePath = "mods";
@@ -502,6 +504,7 @@ internal static partial class Program
         return new Dictionary<string, string>(StringComparer.Ordinal)
         {
             [ModNameToken] = modName,
+            [ModVersionToken] = DefaultModVersion,
             [MarkdownModNameToken] = modName,
         };
     }
