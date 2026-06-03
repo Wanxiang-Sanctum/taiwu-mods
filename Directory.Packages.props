@@ -1,21 +1,13 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <ILRepackVersion>2.0.45</ILRepackVersion>
-    <KrafsPublicizerVersion>2.3.0</KrafsPublicizerVersion>
     <RoslynatorVersion>4.15.0</RoslynatorVersion>
     <TaiwuModKitReferencesVersion>0.84.46-test</TaiwuModKitReferencesVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion
-      Include="ILRepack.Lib.MSBuild.Task"
-      Version="$(ILRepackVersion)"
-    />
-    <PackageVersion
-      Include="Krafs.Publicizer"
-      Version="$(KrafsPublicizerVersion)"
-    />
+    <PackageVersion Include="ILRepack.Lib.MSBuild.Task" Version="2.0.45" />
+    <PackageVersion Include="Krafs.Publicizer" Version="2.3.0" />
     <PackageVersion
       Include="Roslynator.Analyzers"
       Version="$(RoslynatorVersion)"
