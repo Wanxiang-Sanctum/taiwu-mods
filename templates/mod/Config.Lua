@@ -1,17 +1,25 @@
-{
-    Title = "__ModName__",
-    Source = 0,
-    FileId = 0,
-    Version = "0.1.0",
-    BackendPlugins = {
-        "__ModName__.Backend.dll",
-    },
-    BackendPatches = {},
-    FrontendPlugins = {
-        "__ModName__.Frontend.dll",
-    },
-    FrontendPatches = {},
-    EventPackages = {},
-    Author = "",
-    Description = "",
+return {
+	Title = "__ModName__",
+	Source = 0,
+	FileId = 0,
+	Version = "0.0",
+	GameVersion = "0.84.46-test",
+	Author = "",
+	Description = "",
+	WorkshopCover = nil,
+	Visibility = 0,
+	DefaultSettings = { },
+	UpdateLogList = { },
+	ChangeConfig = false,
+	HasArchive = false,
+	NeedRestartWhenSettingChanged = false,
+	BackendPlugins = {
+		"__ModName__.Backend.dll",
+	},
+	BackendPatches = { },
+	FrontendPlugins = {
+		"__ModName__.Frontend.dll",
+	},
+	FrontendPatches = { },
+	EventPackages = { },
 }
