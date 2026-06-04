@@ -86,7 +86,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- remove-shared --name MyCompany.Taiw
 ## 仓库维护
 
 `repo.proj` 承载仓库维护目标，维护命令通过 `dotnet msbuild` 执行。维护工具由
-`aqua.yaml` 声明，下载校验由 `aqua-checksums.json` 固定；首次使用维护目标前，确保本机已安装
+`aqua.yml` 声明，下载校验由 `aqua-checksums.json` 固定；首次使用维护目标前，确保本机已安装
 `aqua`，例如 Windows 可用 `winget install aquaproj.aqua` 或 `scoop install main/aqua`。
 
 ```powershell
@@ -100,7 +100,7 @@ dotnet msbuild repo.proj -t:Check
 dotnet msbuild repo.proj -t:Format
 ```
 
-更新 `aqua.yaml` 中的工具版本后，同步刷新校验文件：
+更新 `aqua.yml` 中的工具版本后，同步刷新校验文件：
 
 ```powershell
 dotnet msbuild repo.proj -t:UpdateToolChecksums
@@ -118,7 +118,7 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
   `templates/README.md`。
 - `.github/workflows/`：GitHub Actions 工作流，当前用于 PR 构建和仓库检查。
 - `repo.proj`：安装本地工具、检查和格式化命令。
-- `aqua.yaml`、`aqua-checksums.json`：仓库维护工具版本和下载校验。
+- `aqua.yml`、`aqua-checksums.json`：仓库维护工具版本和下载校验。
 - `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 mod 项目和内部共享项目。
 - `Directory.Build.props`：仓库级编译、分析器和代码质量规则。
 - `Directory.Packages.props`：NuGet 包版本。
