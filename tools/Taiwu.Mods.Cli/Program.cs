@@ -2,12 +2,12 @@ using System.ComponentModel;
 using System.CommandLine;
 using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Taiwu.Mods.Cli;
 
-internal static partial class Program
+internal static class Program
 {
     private const string DefaultModVersion = "0.0.0";
     private const string DefaultModTemplateRelativePath = "templates/mod";
@@ -455,16 +455,11 @@ internal static partial class Program
             throw new ArgumentException($"{valueName} cannot be empty.");
         }
 
-        if (!NamespaceStyleIdentifierRegex().IsMatch(value))
-        {
-            throw new ArgumentException($"{valueName} must be a C# namespace-style identifier, for example MyMod or MyCompany.MyMod.");
-        }
-
         foreach (string segment in value.Split('.'))
         {
-            if (CSharpKeywords.Contains(segment))
+            if (!SyntaxFacts.IsValidIdentifier(segment) || SyntaxFacts.GetKeywordKind(segment) != SyntaxKind.None)
             {
-                throw new ArgumentException($"{valueName} segment '{segment}' is a C# keyword.");
+                throw new ArgumentException($"{valueName} must be a C# namespace-style identifier, for example MyMod or MyCompany.MyMod.");
             }
         }
     }
@@ -510,94 +505,10 @@ internal static partial class Program
         return fullPath.StartsWith(fullDirectory, StringComparison.OrdinalIgnoreCase);
     }
 
-    [GeneratedRegex(@"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")]
-    private static partial Regex NamespaceStyleIdentifierRegex();
-
     private static readonly HashSet<string> PackagePluginOutputExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
         ".dll",
         ".json",
-    };
-
-    private static readonly HashSet<string> CSharpKeywords = new(StringComparer.Ordinal)
-    {
-        "abstract",
-        "as",
-        "base",
-        "bool",
-        "break",
-        "byte",
-        "case",
-        "catch",
-        "char",
-        "checked",
-        "class",
-        "const",
-        "continue",
-        "decimal",
-        "default",
-        "delegate",
-        "do",
-        "double",
-        "else",
-        "enum",
-        "event",
-        "explicit",
-        "extern",
-        "false",
-        "finally",
-        "fixed",
-        "float",
-        "for",
-        "foreach",
-        "goto",
-        "if",
-        "implicit",
-        "in",
-        "int",
-        "interface",
-        "internal",
-        "is",
-        "lock",
-        "long",
-        "namespace",
-        "new",
-        "null",
-        "object",
-        "operator",
-        "out",
-        "override",
-        "params",
-        "private",
-        "protected",
-        "public",
-        "readonly",
-        "ref",
-        "return",
-        "sbyte",
-        "sealed",
-        "short",
-        "sizeof",
-        "stackalloc",
-        "static",
-        "string",
-        "struct",
-        "switch",
-        "this",
-        "throw",
-        "true",
-        "try",
-        "typeof",
-        "uint",
-        "ulong",
-        "unchecked",
-        "unsafe",
-        "ushort",
-        "using",
-        "virtual",
-        "void",
-        "volatile",
-        "while",
     };
 }
 
