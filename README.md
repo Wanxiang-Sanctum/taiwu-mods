@@ -51,6 +51,11 @@ $env:TAIWU_MODKIT_GITHUB_TOKEN = "<GitHubToken>"
 dotnet restore Taiwu.Mods.slnx
 ```
 
+仓库启用 NuGet lock file，用于固定每个项目的 NuGet 依赖解析结果。新增项目、调整
+`PackageReference` 或更新 `Directory.Packages.props` 后，运行上面的 restore 命令并提交对应
+项目目录下生成或更新的 `packages.lock.json`。CI 使用 locked restore 校验依赖声明和 lock file
+是否一致。
+
 构建解决方案：
 
 ```powershell
@@ -111,6 +116,7 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 - `shared/`：内部共享项目目录。共享边界、目标框架和项目级配置入口见 `shared/README.md`。
 - `templates/`：命令行工具创建项目时使用的 Scriban 模板。模板维护约定见
   `templates/README.md`。
+- `.github/workflows/`：GitHub Actions 工作流，当前用于 PR 构建和仓库检查。
 - `repo.proj`：安装本地工具、检查和格式化命令。
 - `aqua.yaml`、`aqua-checksums.json`：仓库维护工具版本和下载校验。
 - `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 mod 项目和内部共享项目。
