@@ -100,10 +100,6 @@ jobs:
           MOD_NAME: ${{ steps.release.outputs.mod_name }}
           MOD_VERSION: ${{ steps.release.outputs.mod_version }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" "$ASSET_PATH" --clobber
-          else
-            gh release create "$GITHUB_REF_NAME" "$ASSET_PATH" \
-              --title "${MOD_NAME} ${MOD_VERSION}" \
-              --notes "自动打包的可部署目录。下载并解压后，使用 \`${MOD_NAME}\` 目录替换游戏内对应 mod 目录。"
-          fi
+          gh release create "$GITHUB_REF_NAME" "$ASSET_PATH" \
+            --title "${MOD_NAME} ${MOD_VERSION}" \
+            --notes "自动打包的可部署目录。下载并解压后，使用 \`${MOD_NAME}\` 目录替换游戏内对应 mod 目录。"
