@@ -71,6 +71,17 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 `pack-mod` 默认使用 `Release` 构建前后端项目，并把 `Config.Lua` 和插件 DLL
 组装到 `artifacts/mods/MyMod/`。这个目录可直接替换游戏内对应 mod 目录。
 
+发布到 GitHub Release：
+
+```powershell
+git tag mods/MyMod/v1.2.3
+git push origin mods/MyMod/v1.2.3
+```
+
+`mods/<ModName>/v<Version>` 是仓库的发布 tag 约定。推送后，GitHub Actions 会以
+`<ModName>` 运行 `pack-mod`，上传 `MyMod-v1.2.3.zip` 到对应 GitHub Release。zip
+内包含可直接替换游戏 mod 目录的 `MyMod/` 目录；`ModName` 必须与 `mods/` 下的一级目录名一致。
+
 从解决方案取消注册某个 mod，但保留文件：
 
 ```powershell
@@ -116,7 +127,7 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 - `shared/`：内部共享项目目录。共享边界、目标框架和项目级配置入口见 `shared/README.md`。
 - `templates/`：命令行工具创建项目时使用的 Scriban 模板。模板维护约定见
   `templates/README.md`。
-- `.github/workflows/`：GitHub Actions 工作流，当前用于 PR 构建和仓库检查。
+- `.github/workflows/`：GitHub Actions 工作流，覆盖 PR 验证和 mod release 打包。
 - `repo.proj`：安装本地工具、检查和格式化命令。
 - `aqua.yml`、`aqua-checksums.json`：仓库维护工具版本和下载校验。
 - `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 mod 项目和内部共享项目。
