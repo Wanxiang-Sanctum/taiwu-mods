@@ -4,12 +4,17 @@
     "artifacts/**"
   ],
   "json": {},
-  "markdown": {},
+  "markdown": {
+    "associations": [
+      "**/*.md.scriban"
+    ]
+  },
   "toml": {},
   "yaml": {},
   "markup": {
     "associations": [
-      "**/*.{csproj,proj,props,targets,slnx}"
+      "**/*.{csproj,proj,props,targets,slnx}",
+      "**/*.{csproj,proj,props,targets,slnx}.scriban"
     ]
   },
   "plugins": [

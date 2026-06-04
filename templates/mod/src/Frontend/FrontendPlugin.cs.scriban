@@ -1,8 +1,8 @@
 using TaiwuModdingLib.Core.Plugin;
 
-namespace __ModName__.Frontend;
+namespace {{ mod.name }}.Frontend;
 
-[PluginConfig("__ModName__.Frontend", "YourCreatorId", "__ModVersion__")]
+[PluginConfig("{{ mod.name }}.Frontend", "YourCreatorId", "{{ mod.version }}")]
 public sealed class FrontendPlugin : TaiwuRemakePlugin
 {
     public override void Initialize()

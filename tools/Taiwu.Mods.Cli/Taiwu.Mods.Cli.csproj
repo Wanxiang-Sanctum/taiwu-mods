@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <PackageReference Include="Scriban" />
     <PackageReference Include="System.CommandLine" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
 return {
-	Title = "__ModName__",
+	Title = "{{ mod.name }}",
 	Source = 0,
 	FileId = 0,
-	Version = "__ModVersion__",
+	Version = "{{ mod.version }}",
 	GameVersion = "0.84.46-test",
 	Author = "",
 	Description = "",
@@ -14,11 +14,11 @@ return {
 	HasArchive = false,
 	NeedRestartWhenSettingChanged = false,
 	BackendPlugins = {
-		"__ModName__.Backend.dll",
+		"{{ mod.name }}.Backend.dll",
 	},
 	BackendPatches = { },
 	FrontendPlugins = {
-		"__ModName__.Frontend.dll",
+		"{{ mod.name }}.Frontend.dll",
 	},
 	FrontendPatches = { },
 	EventPackages = { },
