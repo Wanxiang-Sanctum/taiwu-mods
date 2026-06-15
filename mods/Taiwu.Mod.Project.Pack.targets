@@ -3,15 +3,9 @@
     <InternalizeMergedDependencies
       Condition="'$(InternalizeMergedDependencies)' == ''"
     >true</InternalizeMergedDependencies>
-    <RenameInternalizedDependencies
-      Condition="'$(RenameInternalizedDependencies)' == ''"
-    >false</RenameInternalizedDependencies>
     <AllowDuplicateInternalizedResources
       Condition="'$(AllowDuplicateInternalizedResources)' == ''"
     >false</AllowDuplicateInternalizedResources>
-    <_TaiwuPublicizerKeepTypesFile
-      Condition="'$(_TaiwuPublicizerKeepTypesFile)' == ''"
-    >$(IntermediateOutputPath)TaiwuModPublicizerKeepTypes.txt</_TaiwuPublicizerKeepTypesFile>
     <TaiwuModPackDependsOn Condition="'$(TaiwuModPackDependsOn)' == ''"
     >Build</TaiwuModPackDependsOn>
   </PropertyGroup>
@@ -171,34 +165,9 @@
     />
   </Target>
 
-  <!-- ILRepack must keep Publicizer runtime attributes recognizable after merge. -->
-  <Target
-    Name="WritePublicizerKeepTypesFile"
-    Condition="'$(InternalizeMergedDependencies)' == 'true' And '$(RenameInternalizedDependencies)' == 'true'"
-  >
-    <ItemGroup>
-      <_TaiwuPublicizerKeepType
-        Include="System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute"
-      />
-    </ItemGroup>
-    <MakeDir
-      Directories="$([System.IO.Path]::GetDirectoryName('$(_TaiwuPublicizerKeepTypesFile)'))"
-    />
-    <WriteLinesToFile
-      File="$(_TaiwuPublicizerKeepTypesFile)"
-      Lines="@(_TaiwuPublicizerKeepType)"
-      Overwrite="true"
-    />
-    <ItemGroup>
-      <_TaiwuPublicizerKeepTypesFilePath
-        Include="$(_TaiwuPublicizerKeepTypesFile)"
-      />
-    </ItemGroup>
-  </Target>
-
   <Target
     Name="ResolveTaiwuModPackOutputs"
-    DependsOnTargets="ResolveTaiwuProjectPackAssets;WritePublicizerKeepTypesFile"
+    DependsOnTargets="ResolveTaiwuProjectPackAssets"
     Outputs="@(_TaiwuPackOutput)"
   >
     <PropertyGroup>
@@ -220,12 +189,8 @@
         <PackagePath>%(TaiwuModPackEntry.PackagePath)</PackagePath>
         <InternalizeMergedDependencies
         >$(InternalizeMergedDependencies)</InternalizeMergedDependencies>
-        <RenameInternalizedDependencies
-        >$(RenameInternalizedDependencies)</RenameInternalizedDependencies>
         <AllowDuplicateInternalizedResources
         >$(AllowDuplicateInternalizedResources)</AllowDuplicateInternalizedResources>
-        <InternalizeExcludeFile
-        >@(_TaiwuPublicizerKeepTypesFilePath->'%(FullPath)')</InternalizeExcludeFile>
         <KeyFile>$(KeyFile)</KeyFile>
       </_TaiwuPackOutput>
       <_TaiwuPackOutput Include="@(_TaiwuUniqueMergeDll)">
