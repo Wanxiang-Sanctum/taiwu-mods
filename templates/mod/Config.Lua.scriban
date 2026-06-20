@@ -6,9 +6,9 @@ return {
   Author = "",
   Description = "",
   BackendPlugins = {
-    "Backend/{{ mod.name }}.Backend.dll",
+    "{{ mod.name }}.Backend.dll",
   },
   FrontendPlugins = {
-    "Frontend/{{ mod.name }}.Frontend.dll",
+    "{{ mod.name }}.Frontend.dll",
   },
 }

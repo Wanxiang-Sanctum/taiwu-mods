@@ -67,14 +67,14 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 被 `TaiwuModPackProject` 引入的项目通过项目级包产物进入最终目录。`mods/Directory.Build.targets`
 已经为 `mods/` 下的普通 SDK 项目导入默认项目组包目标；前端和后端插件项目还会自动把入口 DLL
-声明到 `Plugins/` 下。模板生成的前后端项目默认分别部署到 `Plugins/Frontend/` 和
-`Plugins/Backend/`，通常只需要在 `Taiwu.Mod.Pack.proj` 中被引用，不需要手写入口程序集声明。
+声明到 `Plugins/` 下。模板生成的前后端项目通常只需要在 `Taiwu.Mod.Pack.proj` 中被引用，不需要
+手写入口程序集声明。
 
 项目自身需要额外输出文件或目录时，在项目文件或项目旁的 `Taiwu.Mod.props` 中声明：
 
 ```xml
 <ItemGroup>
-  <TaiwuModPackFile Include="$(TargetPath)" PackagePath="Plugins/MyMod.Ipc.dll" />
+  <TaiwuModPackFile Include="$(TargetDir)MyMod.Ipc.dll" PackagePath="Plugins/MyMod.Ipc.dll" />
 </ItemGroup>
 ```
 
@@ -150,29 +150,28 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 太吾读取 `Config.Lua` 中的 `FrontendPlugins` 和 `BackendPlugins`，并从 Mod 的 `Plugins/`
 目录加载这些插件入口 DLL。列表项是相对 `Plugins/` 的入口路径，可以是文件名，也可以包含子目录；
-独立依赖 DLL 同样部署到 `Plugins/` 下。
+游戏本体的普通插件依赖解析以 `Plugins/` 根目录为基准。
 
-前端和后端插件项目会自动把自身入口 DLL 声明到 `Plugins/` 下。模板生成的项目默认设置
-`TaiwuModPluginSubdirectory`，使前端入口进入 `Plugins/Frontend/`，后端入口进入
-`Plugins/Backend/`，并在 `Config.Lua` 中使用 `Frontend/<TargetFileName>` 和
-`Backend/<TargetFileName>`。额外依赖需要在插件项目旁的 `Taiwu.Mod.props` 或项目文件中显式声明。
-普通 `dotnet build` 负责生成项目常规输出；`pack-mod` 在构建后读取项目包产物组装最终包。
+前端和后端插件项目默认把自身入口 DLL 声明到 `Plugins/` 下，并在 `Config.Lua` 中直接使用
+`<TargetFileName>`。额外依赖需要在插件项目旁的 `Taiwu.Mod.props` 或项目文件中显式声明。普通
+`dotnet build` 负责生成项目常规输出；`pack-mod` 在构建后读取项目包产物组装最终包。
 
-需要把入口和复制依赖部署到 `Plugins/` 下的子目录时，在插件项目旁的 `Taiwu.Mod.props` 中设置：
+只有 Mod 自己提供了子目录依赖解析能力时，才应把入口和复制依赖部署到 `Plugins/` 下的其他子目录。
+在插件项目旁的 `Taiwu.Mod.props` 中设置：
 
 ```xml
 <PropertyGroup>
-  <TaiwuModPluginSubdirectory>Frontend</TaiwuModPluginSubdirectory>
+  <TaiwuModPluginSubdirectory>Frontend/Tools</TaiwuModPluginSubdirectory>
 </PropertyGroup>
 ```
 
 `TaiwuModPluginSubdirectory` 是相对 `Plugins/` 的子目录，例如 `Frontend` 或
-`Frontend/Tools`，不要包含 `Plugins/` 前缀或首尾斜杠。留空时入口和复制依赖直接部署到 `Plugins/`。
-设置后，在 `Config.Lua` 中使用相对 `Plugins/` 的入口路径，例如
-`Frontend/MyMod.Frontend.dll`。这个设置只改变包内路径；如果运行时依赖解析还需要按入口目录优先，
-应由 mod 声明的前置加载器或运行时组件提供。
+`Frontend/Tools`，不要包含 `Plugins/` 前缀或首尾斜杠。未设置时入口和复制依赖直接部署到
+`Plugins/`。设置后，在 `Config.Lua` 中使用相对 `Plugins/` 的入口路径，例如
+`Frontend/Tools/MyMod.Frontend.dll`。这个设置只改变包内路径；子目录依赖解析必须由 mod 声明的
+前置加载器或运行时组件提供。
 
-依赖部署有两种动作。需要作为独立文件复制到 `Plugins/` 时，声明：
+依赖部署有两种动作。需要作为独立文件随入口复制时，声明：
 
 ```xml
 <ItemGroup>
@@ -189,8 +188,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 ```
 
 每个依赖选择一种动作。同一个 DLL 同时写进 `TaiwuModMergeDependency` 和
-`TaiwuModCopyDependency` 会报错；复制依赖默认写入 `Plugins/<DLL 文件名>`，入口 DLL 部署到
-`Plugins/` 下的子目录时，复制依赖跟随入口 DLL 的目录。这两个依赖声明只表达太吾
+`TaiwuModCopyDependency` 会报错；复制依赖默认写入 `Plugins/<DLL 文件名>`，入口 DLL 部署到子目录时，
+复制依赖跟随入口 DLL 的目录，因此同样要求 Mod 具备子目录依赖解析能力。这两个依赖声明只表达太吾
 插件入口的 DLL 处理方式；非插件项目的运行时依赖应放在项目自己的发布目录中。
 
 `Include` 只写 DLL 文件名。`pack-mod` 不读取 NuGet 缓存路径或任意项目输出路径，而是在入口项目
