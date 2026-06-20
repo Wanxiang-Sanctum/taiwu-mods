@@ -2,13 +2,21 @@
 
 Mod 源码目录。
 
-每个一级子目录是一个独立 mod。新建 mod：
+每个一级子目录是一个独立 Mod。本 README 维护所有 mod 共同遵守的组包、插件入口、引用和部署规则；
+具体玩法、运行链路和源码模块边界由各 mod 自己的 README 维护。
+
+从模板创建出的仓库如果维护 mod 入口表，表中只保留选择信息；玩法、配置、运行链路和源码模块说明留在
+对应 mod 的 README 里。
+
+新建 Mod：
 
 ```powershell
 dotnet run --project tools/Taiwu.Mods.Cli -- create-mod --name MyMod
 ```
 
-新建后，mod 目录包含游戏读取的 `Config.Lua`、项目内 README，以及前端和后端两个插件项目。
+新建后，Mod 目录包含游戏读取的 `Config.Lua`、项目内 README，以及前端和后端两个插件项目。
+太吾游戏读取 `Config.Lua` 以及同步 Steam Workshop 字段的通用语义见仓库级文档
+[`docs/taiwu-mod-steam-publishing-boundary.md`](../docs/taiwu-mod-steam-publishing-boundary.md)。
 
 ```text
 mods/MyMod/
@@ -38,7 +46,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 ## 组包声明
 
-每个 mod 的 `Taiwu.Mod.Pack.proj` 是可部署目录的组包入口。它只描述最终目录由哪些文件、目录和
+每个 Mod 的 `Taiwu.Mod.Pack.proj` 是可部署目录的组包入口。它只描述最终目录由哪些文件、目录和
 项目组成，不给项目额外标记类型；太吾插件、共享 DLL、发布目录和普通静态文件都走同一条
 组合路径。
 
@@ -79,7 +87,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 - `TaiwuModPackDirectory`：复制目录。
 - `TaiwuModPackEntry`：入口程序集。只有项目需要自行声明入口 DLL 并参与依赖合并时才直接使用。
 
-`TaiwuModPackProject` 只用于 mod 的组包入口，不在项目级继续嵌套。
+`TaiwuModPackProject` 只用于 Mod 的组包入口，不在项目级继续嵌套。
 
 需要把某个项目的 `dotnet publish` 输出目录整体放进包内时，在该项目中导入发布目录组包目标：
 
@@ -95,7 +103,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 </Project>
 ```
 
-然后在 mod 的 `Taiwu.Mod.Pack.proj` 中加入：
+然后在 Mod 的 `Taiwu.Mod.Pack.proj` 中加入：
 
 ```xml
 <ItemGroup>
@@ -109,12 +117,17 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 只有维护新的组包 helper，或项目不使用仓库默认项目组包目标时，才需要直接关心
 `ResolveTaiwuModPackOutputs`。这是 `pack-mod` 读取项目包产物的 MSBuild 边界；CLI 使用
-MSBuild 目标结果 JSON，不要求项目生成额外清单文件。
+MSBuild 目标结果 JSON 作为项目包产物清单。
 
 ## Taiwu 引用和 Publicizer
 
 插件项目默认引用 `Taiwu.ModKit.References.Plugin`。需要访问更宽的游戏 API 时，再按实际代码需要
 添加 `Taiwu.ModKit.References.Frontend` 或 `Taiwu.ModKit.References.Backend` 等引用包。
+
+这些 `Taiwu.ModKit.References.*` 包由组织内部
+[`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 仓库的引用包工具生成和发布；包拆分原则、DLL
+选择和发布目标归该仓库的工具配置维护。本仓库通过稳定包 ID 选择需要引用的包，并在仓库根
+`Directory.Packages.props` 固定版本。
 
 插件项目默认具备编译期 Publicizer 支持，但不会自动公开化游戏 DLL。需要在编译期访问游戏 DLL
 的非 public API 时，在 `Taiwu.Mod.props` 中声明具体 `Publicize` 项；只声明实际需要的程序集、类型或成员。
@@ -130,7 +143,7 @@ MSBuild 目标结果 JSON，不要求项目生成额外清单文件。
 ```
 
 前端通常从 `Assembly-CSharp` 开始，后端通常从 `GameData` 开始；如果只需要具体类型或成员，优先写
-更窄的 `Publicize Include`。Publicizer 运行时策略由仓库按端侧固定选择，不作为普通 mod 配置入口。
+更窄的 `Publicize Include`。Publicizer 运行时策略由仓库按端侧固定选择，不作为普通 Mod 配置入口。
 
 需要关闭默认 Publicizer 支持时，可以在 `Taiwu.Mod.props` 中设置：
 
@@ -142,7 +155,7 @@ MSBuild 目标结果 JSON，不要求项目生成额外清单文件。
 
 ## 插件入口和依赖部署
 
-太吾读取 `Config.Lua` 中的 `FrontendPlugins` 和 `BackendPlugins`，并从 mod 的 `Plugins/`
+太吾读取 `Config.Lua` 中的 `FrontendPlugins` 和 `BackendPlugins`，并从 Mod 的 `Plugins/`
 目录加载这些插件入口 DLL。列表项是相对 `Plugins/` 的入口路径，可以是文件名，也可以包含子目录；
 独立依赖 DLL 同样部署到 `Plugins/` 下。
 
@@ -188,7 +201,7 @@ MSBuild 目标结果 JSON，不要求项目生成额外清单文件。
 `Include` 只写 DLL 文件名。`pack-mod` 不读取 NuGet 缓存路径或任意项目输出路径，而是在入口项目
 本次构建后，从进入该项目输出目录的 DLL 中按文件名匹配，再执行复制或合并。
 
-需要随 mod 部署的依赖，要先通过项目自身的 `ProjectReference`、`PackageReference` 等标准引用进入
+需要随 Mod 部署的依赖，要先通过项目自身的 `ProjectReference`、`PackageReference` 等标准引用进入
 入口项目输出目录，再用 `TaiwuModMergeDependency` 或 `TaiwuModCopyDependency` 声明打包动作。
 游戏或运行时已经提供的 DLL 作为外部运行时依赖处理。
 

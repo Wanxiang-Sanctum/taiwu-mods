@@ -97,19 +97,46 @@ dotnet run --project tools/Taiwu.Mods.Cli -- remove-shared --name MyCompany.Taiw
 
 ## 仓库结构
 
-- `tools/Taiwu.Mods.Cli/`：创建 mod、内部共享项目、取消解决方案注册和打包可部署目录的命令行工具。
 - `mods/`：实际 mod 源码目录。组包声明、前后端插件项目、Taiwu 引用、Publicizer、插件依赖和
   发布目录项目约定见 `mods/README.md`。
 - `shared/`：内部共享项目目录。共享边界、目标框架和项目级配置入口见 `shared/README.md`。
 - `templates/`：命令行工具创建项目时使用的 Scriban 模板。模板维护约定见
   `templates/README.md`。
+- `tools/`：创建 mod、内部共享项目、取消解决方案注册和打包可部署目录的命令行工具，工具文档关系见
+  `tools/README.md`。
 - `.github/workflows/`：GitHub Actions 工作流，覆盖 PR 验证和 mod release 打包。
+- `docs/`：跨具体 Mod 复用的太吾机制、平台机制、发布经验和维护判断；入口见 `docs/README.md`。
 - `artifacts/mods/`：`pack-mod` 输出的可部署目录。
 - `Taiwu.Mods.Paths.props`：仓库级 MSBuild 路径 alias，供子目录 props 和项目引用稳定目录。
 - `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 mod 项目和内部共享项目。
 - `Directory.Build.props`：仓库级编译、分析器和代码质量规则。
 - `Directory.Packages.props`：NuGet 包版本。
 - `NuGet.config`：NuGet 包源、包源映射，以及从环境变量读取 GitHub Packages 凭据的配置。
+
+## 文档与边界
+
+根 README 负责说明模板仓库身份、常用命令、跨目录约定和外部依赖关系。从模板创建出的仓库可以继续沿用这个
+边界：根 README 说明仓库级入口，目录级 README 说明各目录的共同规则。
+
+- `docs/` 沉淀跨具体 Mod 复用的太吾机制、平台机制、发布经验和维护判断。
+- `mods/README.md` 说明所有 mod 共同遵守的组包、插件入口、引用和部署规则。
+- `shared/README.md` 说明内部共享项目边界、目标框架和项目级配置入口。
+- `templates/README.md` 说明模板目录、模板变量和渲染规则。
+- `tools/README.md` 说明仓库维护工具的实现入口和文档责任。
+
+具体 mod 的玩法、运行链路、工作区内容、源码模块和维护入口由对应 `mods/<ModName>/README.md` 及其子目录
+README 维护；内部共享项目自己的 API、运行时依赖、部署建议和维护入口由 `shared/<ProjectName>/README.md`
+维护。
+
+## 外部依据
+
+模板生成的 mod 项目引用 `Taiwu.ModKit.References.*` NuGet 包。包切分、打包和发布流程归
+[`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 的工具与配置维护；本仓库通过
+`Directory.Packages.props` 固定版本，并通过 `NuGet.config` 配置包源。
+
+涉及游戏机制、游戏文本、运行时行为或 Steam Workshop 语义时，文档以太吾绘卷游戏本体和对应外部平台为依据。
+`taiwu-modkit` 中的游戏观察快照承担组织内部检索、跳转和变更对照；组织内部维护者需要更新这些快照时，
+在 `taiwu-modkit` 内运行对应工具重新生成。
 
 ## 仓库维护
 
