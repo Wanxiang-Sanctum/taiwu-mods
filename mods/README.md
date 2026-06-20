@@ -67,8 +67,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 被 `TaiwuModPackProject` 引入的项目通过项目级包产物进入最终目录。`mods/Directory.Build.targets`
 已经为 `mods/` 下的普通 SDK 项目导入默认项目组包目标；前端和后端插件项目还会自动把入口 DLL
-声明为 `Plugins/<TargetFileName>`。模板生成的前后端项目通常只需要在 `Taiwu.Mod.Pack.proj`
-中被引用，不需要手写入口程序集声明。
+声明到 `Plugins/` 下。模板生成的前后端项目默认分别部署到 `Plugins/Frontend/` 和
+`Plugins/Backend/`，通常只需要在 `Taiwu.Mod.Pack.proj` 中被引用，不需要手写入口程序集声明。
 
 项目自身需要额外输出文件或目录时，在项目文件或项目旁的 `Taiwu.Mod.props` 中声明：
 
@@ -152,9 +152,11 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 目录加载这些插件入口 DLL。列表项是相对 `Plugins/` 的入口路径，可以是文件名，也可以包含子目录；
 独立依赖 DLL 同样部署到 `Plugins/` 下。
 
-前端和后端插件项目会自动把自身入口 DLL 声明为 `Plugins/<TargetFileName>`。额外依赖需要在插件项目旁
-的 `Taiwu.Mod.props` 或项目文件中显式声明。普通 `dotnet build` 负责生成项目常规输出；`pack-mod`
-在构建后读取项目包产物组装最终包。
+前端和后端插件项目会自动把自身入口 DLL 声明到 `Plugins/` 下。模板生成的项目默认设置
+`TaiwuModPluginSubdirectory`，使前端入口进入 `Plugins/Frontend/`，后端入口进入
+`Plugins/Backend/`，并在 `Config.Lua` 中使用 `Frontend/<TargetFileName>` 和
+`Backend/<TargetFileName>`。额外依赖需要在插件项目旁的 `Taiwu.Mod.props` 或项目文件中显式声明。
+普通 `dotnet build` 负责生成项目常规输出；`pack-mod` 在构建后读取项目包产物组装最终包。
 
 需要把入口和复制依赖部署到 `Plugins/` 下的子目录时，在插件项目旁的 `Taiwu.Mod.props` 中设置：
 

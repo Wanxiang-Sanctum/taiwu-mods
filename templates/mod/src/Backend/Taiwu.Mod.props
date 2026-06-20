@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <TaiwuModSide>Backend</TaiwuModSide>
+    <TaiwuModPluginSubdirectory>Backend</TaiwuModPluginSubdirectory>
   </PropertyGroup>
 
   <!--

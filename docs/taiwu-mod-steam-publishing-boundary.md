@@ -72,6 +72,9 @@
 ## Config.Lua 字段
 
 下面的字段说明描述太吾读取和写回 `Config.Lua` 的语义，不是 Steam API schema，也不是发布内容白名单。
+模板生成的初始 `Config.Lua` 只预置标题、版本、作者/简介占位和插件入口；下面列出的其他字段由游戏读取、写回或
+具体功能使用，不是模板起步必填。发布、设置、依赖、封面、风险提示等字段按实际 Mod 需要添加即可；
+太吾写回时可能会补充 `Source`、`FileId`、`GameVersion`、设置表、更新记录表或风险标记。
 
 | 字段 | 类型 | 含义 |
 | --- | --- | --- |
@@ -79,12 +82,12 @@
 | `Source` | number | 太吾 `ModSource`：`0` 是本地/外部 Mod，`1` 是 Steam Workshop，`2` 是 DLC。游戏从本地 `Mod/` 目录读取时会把非 `0` 改回 `0` 并写回。 |
 | `FileId` | number | `ModId` 的文件 id。Steam Mod 使用 Workshop `PublishedFileId`；本地 Mod 可为 `0`，游戏会按目录名生成并缓存临时 id。 |
 | `Version` | string 或 number | Mod 版本。字符串会按 .NET `System.Version` 解析成 `ModId.Version`；点分数字版本可被直接解析。 |
-| `GameVersion` | string | 该 Mod 记录的太吾游戏版本，用于过期判断和旧版插件兼容分支。游戏写回时会更新为当前游戏版本。 |
+| `GameVersion` | string | 该 Mod 记录的太吾游戏版本，用于过期判断和旧版插件兼容分支。字段缺省时会被视为未声明兼容版本；游戏写回时会更新为当前游戏版本。 |
 | `Author` | string | 作者名；上传时也会写入 Steam custom metadata。 |
 | `Description` | string | Mod 简介；上传时同步为 Workshop 描述。 |
 | `Cover` | string 或 nil | 本地展示封面路径。上传时如果 `WorkshopCover` 为空，会尝试用它作为 Workshop 预览图。 |
 | `WorkshopCover` | string 或 nil | Workshop 预览图路径；为空时回退到 `Cover`。 |
-| `DetailImageList` | string list | Workshop/详情页附加预览图路径列表。字段缺省时，游戏写回会补成空表。 |
+| `DetailImageList` | string list | Workshop/详情页附加预览图路径列表。字段缺省时按空列表处理；无详情图时游戏写回会移除该字段。 |
 | `Visibility` | number | Workshop 可见性：`0` public，`1` friends only，`2` private，`3` unlisted。 |
 | `TagList` | string list | Mod 标签；上传时同步到 Workshop tags，也用于游戏内 Workshop 过滤。 |
 | `Dependencies` | number list | Workshop 依赖的 published file id 列表。它表达 Steam Workshop item 之间的依赖关系，不是 DLL 依赖清单。 |

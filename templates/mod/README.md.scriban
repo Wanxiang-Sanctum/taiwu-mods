@@ -30,6 +30,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name {{ mod.name }}
 
 - `Config.Lua`：游戏读取的 mod 配置；字段语义见仓库级文档
   [太吾游戏 Mod 配置与 Steam 发布边界](../../docs/taiwu-mod-steam-publishing-boundary.md)。
+  初始文件只预置标题、版本、作者/简介占位和插件入口；封面、标签、Workshop 依赖、设置项、
+  风险标记和更新记录按实际发布需要再添加。
 - `Taiwu.Mod.Pack.proj`：最终可部署目录的组包声明。
-- `src/Frontend/`：前端插件项目。
-- `src/Backend/`：后端插件项目。
+- `src/Frontend/`：前端插件项目，默认部署到 `Plugins/Frontend/`。
+- `src/Backend/`：后端插件项目，默认部署到 `Plugins/Backend/`。
