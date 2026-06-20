@@ -1,20 +1,20 @@
 # 开发维护入口
 
 本文面向维护本模板仓库源码、文档、模板、组包流程和发布流程的人。只想从模板创建、构建或打包自己的 Mod 仓库时，从根
-`README.md` 开始；提交贡献前的协作入口见根 `CONTRIBUTING.md`。
+[`README.md`](../../README.md) 开始；提交贡献前的协作入口见根 [`CONTRIBUTING.md`](../../CONTRIBUTING.md)。
 
 ## 阅读路径
 
 | 任务 | 入口 |
 | --- | --- |
 | 构建、检查、打包、发布或验证模板生成项目 | 本文 |
-| 维护所有 Mod 共同的组包、插件入口、依赖部署规则 | `../../mods/README.md` |
-| 维护内部共享项目共同边界 | `../../shared/README.md` |
-| 维护创建/移除命令实现或模板 | `../../tools/README.md`、`../../templates/README.md` |
-| 维护文档分层和同步规则 | `documentation.md` |
-| 维护跨 Mod 复用的机制参考或仓库经验 | `../README.md` |
+| 维护所有 Mod 共同的组包、插件入口、依赖部署规则 | [`mods/README.md`](../../mods/README.md) |
+| 维护内部共享项目共同边界 | [`shared/README.md`](../../shared/README.md) |
+| 维护创建/移除命令实现或模板 | [`tools/README.md`](../../tools/README.md)、[`templates/README.md`](../../templates/README.md) |
+| 维护文档分层和同步规则 | [文档分层与维护](documentation.md) |
+| 维护跨 Mod 复用的机制参考或仓库经验 | [`docs/README.md`](../README.md) |
 
-生成的具体 Mod 应把 `README.md` 保持为玩家说明，源码模块、构建命令、组包细节和内部设计入口放在
+生成的具体 Mod 应把 `README.md` 留给该 Mod 自己的使用者说明；源码模块、构建命令、组包细节和内部设计入口放在
 `DEVELOPMENT.md`、`docs/` 或源码子目录 README。
 
 ## 外部依据
@@ -48,6 +48,9 @@ $env:TAIWU_MODKIT_GITHUB_USER = "<GitHubUser>"
 $env:TAIWU_MODKIT_GITHUB_TOKEN = "<GitHubToken>"
 dotnet restore Taiwu.Mods.slnx
 ```
+
+本地可以用未跟踪的 `.env` 保存变量值，但提交内容只能保留变量名或占位值。`NuGet.config` 从
+`TAIWU_MODKIT_GITHUB_USER` 和 `TAIWU_MODKIT_GITHUB_TOKEN` 读取凭据。
 
 仓库启用 NuGet lock file，用于固定每个项目的 NuGet 依赖解析结果。新增项目、调整 `PackageReference` 或更新
 `Directory.Packages.props` 后，运行 restore 并提交对应项目目录下生成或更新的 `packages.lock.json`。CI 使用
@@ -83,6 +86,8 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 
 ## 生成项目与打包
 
+以下 CLI 命令默认以当前目录作为仓库根目录；从其它目录调用时传入 `--repo-root <path>`。
+
 新增实际 Mod：
 
 ```powershell
@@ -114,7 +119,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 `pack-mod` 默认使用 `Release` 运行 `mods/<ModName>/Taiwu.Mod.Pack.proj`，并把该组包入口声明的文件、目录和项目产物
 组装到 `artifacts/mods/<ModName>/`。这个目录可直接替换游戏内对应 Mod 目录；组包声明、插件入口、依赖部署和发布目录
-项目约定见 `mods/README.md`。
+项目约定见 [`mods/README.md`](../../mods/README.md)。
 
 从解决方案取消注册某个 Mod，但保留文件：
 
@@ -147,11 +152,14 @@ git push origin mods/<ModName>/v<Version>
 ## 仓库结构
 
 - `mods/`：实际 Mod 源码目录。Mod 目录约定、组包声明、插件项目、Taiwu 引用、Publicizer、插件依赖和发布目录项目约定见
-  `mods/README.md`。
-- `shared/`：内部共享项目目录。共享项目目录约定、共享边界、目标框架和项目级配置入口见 `shared/README.md`。
+  [`mods/README.md`](../../mods/README.md)。
+- `shared/`：内部共享项目目录。共享项目目录约定、共享边界、目标框架和项目级配置入口见
+  [`shared/README.md`](../../shared/README.md)。
 - `docs/`：模板维护者使用的开发维护文档、跨 Mod 机制参考和仓库经验。
-- `tools/`：本仓库辅助命令行工具，负责创建项目、取消解决方案注册和打包可部署目录；实现入口见 `tools/README.md`。
-- `templates/`：本仓库创建命令使用的 Scriban 初始骨架；变量和渲染规则见 `templates/README.md`。
+- `tools/`：本仓库辅助命令行工具，负责创建项目、取消解决方案注册和打包可部署目录；实现入口见
+  [`tools/README.md`](../../tools/README.md)。
+- `templates/`：本仓库创建命令使用的 Scriban 初始骨架；变量和渲染规则见
+  [`templates/README.md`](../../templates/README.md)。
 - `.github/workflows/`：GitHub Actions 工作流，覆盖 PR 验证和 Mod release 打包。
 - `artifacts/mods/`：`pack-mod` 输出的可部署目录；手写源码从 `mods/`、`shared/` 和 `tools/` 进入。
 - `Taiwu.Mods.Paths.props`：仓库级 MSBuild 路径 alias，供子目录 props 和项目引用稳定目录。

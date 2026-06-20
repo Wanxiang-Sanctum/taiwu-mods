@@ -3,7 +3,7 @@
 Mod 源码和组包规则目录。
 
 本文面向从模板创建仓库后的 Mod 仓库维护者，也作为模板仓库维护共同规则的源头。每个一级子目录是一个独立 Mod；本文维护
-Mod 目录约定，以及所有 Mod 共同遵守的组包、插件入口、引用和部署规则。
+Mod 目录约定，以及所有 Mod 共同遵守的组包、插件入口、引用和部署规则，不维护具体 Mod 的使用者文案。
 
 具体 Mod 的 `README.md` 面向 Mod 使用者；源码模块、内部设计和项目内维护入口由对应
 `mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README 维护。
@@ -13,8 +13,12 @@ Mod 目录约定，以及所有 Mod 共同遵守的组包、插件入口、引�
 `mods/` 下的一级子目录就是实际 Mod 边界。目录名同时用于 `pack-mod --name <ModName>`、发布 tag 中的
 `mods/<ModName>/v<Version>` 约定，以及可部署目录 `artifacts/mods/<ModName>/`。
 
-从模板创建出的仓库如果维护多个 Mod，可以在本节放置一级目录索引；索引只保留选择信息和稳定入口，玩家说明留在对应
-`README.md`，源码模块说明留在对应 `DEVELOPMENT.md`、`docs/` 或源码子目录 README。
+从模板创建出的仓库如果维护多个 Mod，可以在本节放置一级目录索引；索引只保留选择信息和稳定入口。面向使用者的文案留在对应
+`README.md` 并由具体 Mod 自己组织；源码模块说明留在对应 `DEVELOPMENT.md`、`docs/` 或源码子目录 README。
+
+## 新建与构建
+
+以下命令默认从仓库根目录运行。需要从其它目录调用 CLI 时，传入 `--repo-root <path>`。
 
 新建 Mod：
 
@@ -22,12 +26,14 @@ Mod 目录约定，以及所有 Mod 共同遵守的组包、插件入口、引�
 dotnet run --project tools/Taiwu.Mods.Cli -- create-mod --name MyMod
 ```
 
+`ModName` 必须是 C# 命名空间风格的标识符，例如 `MyMod` 或 `MyCompany.MyMod`。
+
 新建后，Mod 目录包含游戏读取的 `Config.Lua`、项目内 README，以及前端和后端两个插件项目。
 太吾游戏读取 `Config.Lua` 以及同步 Steam Workshop 字段的通用语义见仓库级文档
 [`docs/taiwu-mod-steam-publishing-boundary.md`](../docs/taiwu-mod-steam-publishing-boundary.md)。
 
-创建命令生成新 Mod 的初始骨架。项目创建后，真实包内容由该 Mod 的 `Taiwu.Mod.Pack.proj`、插件项目文件和项目旁
-`Taiwu.Mod.props` 维护；`templates/` 只作为新项目起点。新增实际 Mod 时，`README.md` 保持玩家说明视角，
+创建命令生成新 Mod 的初始骨架。项目创建后，真实包内容和维护入口由该 Mod 的 `Taiwu.Mod.Pack.proj`、插件项目文件和项目旁
+`Taiwu.Mod.props` 维护；`templates/` 只作为新项目起点。新增实际 Mod 时，`README.md` 只保留面向使用者的最小入口，
 `DEVELOPMENT.md` 承接源码维护入口。
 
 ```text
@@ -55,7 +61,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 ```
 
 `pack-mod` 默认使用 `Release` 运行 `mods/MyMod/Taiwu.Mod.Pack.proj`，并把该组包入口
-声明的文件、目录和项目产物组装到 `artifacts/mods/MyMod/`。
+声明的文件、目录和项目产物组装到 `artifacts/mods/MyMod/`。需要调整构建配置或输出根目录时，使用
+`--configuration` 或 `--artifacts-root`。
 
 ## 组包声明
 
@@ -79,7 +86,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 ```
 
 在组包入口中，`TaiwuModPackFile` 复制单个文件，`TaiwuModPackDirectory` 复制目录，
-`TaiwuModPackProject` 引入一个参与组包的项目。包内路径写在 `PackagePath` 元数据中，必须是相对路径。
+`TaiwuModPackProject` 引入一个参与组包的项目。包内路径写在 `PackagePath` 元数据中，必须是非空相对路径，不能越过可部署目录。
 
 被 `TaiwuModPackProject` 引入的项目通过项目级包产物进入最终目录。`mods/Directory.Build.targets`
 已经为 `mods/` 下的普通 SDK 项目导入默认项目组包目标；前端和后端插件项目还会自动把入口 DLL

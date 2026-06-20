@@ -25,7 +25,7 @@
   这里维护实际 Mod 索引。
 - `shared/README.md` 拥有内部共享项目的目录约定、目标框架和共享项目引用边界；从模板建立的仓库可在这里维护共享项目索引。
 - `tools/README.md` 和 `templates/README.md` 说明工具实现入口、模板变量和渲染规则。
-- 生成的具体 Mod `README.md` 面向 Mod 使用者，说明玩法、运行边界和配置入口。
+- 生成的具体 Mod `README.md` 是面向 Mod 使用者的最小入口；具体内容结构由该 Mod 自己决定。
 - 生成的具体 Mod `DEVELOPMENT.md` 面向源码维护者，说明源码模块、组包内容、构建命令和内部设计入口。
 - 共享项目和源码子目录的 README 说明各自的模块边界、API、部署建议和项目内约定。
 
@@ -35,9 +35,13 @@
 维护；内部共享项目索引如果存在，由 `shared/README.md` 维护；`docs/README.md` 只索引仓库级文档。开发手册、机制参考和
 具体设计文档需要项目发现时，链接目录级 README。
 
-索引行只保留选择信息和稳定入口。具体 Mod 的玩家说明留在对应 `mods/<ModName>/README.md`；源码迭代说明留在对应
+索引行只保留选择信息和稳定入口。具体 Mod 面向使用者的说明留在对应 `mods/<ModName>/README.md`，并由该 Mod 自己组织；
+源码迭代说明留在对应
 `mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README；共享库 API、运行时依赖和部署建议留在
 对应 `shared/<ProjectName>/README.md`。
+
+同一个命令或概念需要面向多个读者出现时，只在最近的拥有者文档解释语义；其它入口保留最短可执行路径、必要前置条件和链接。
+例如根 README 可以列出常用命令，`mods/README.md` 解释组包 item，`tools/README.md` 解释 CLI 实现入口。
 
 新增仓库级文档时，先判断它是机制参考、仓库经验还是开发维护文档。机制参考要把依据归到太吾游戏本体、外部平台或公开
 可观察行为；仓库经验要把依据归到本仓库流程；开发维护文档要归到 `docs/development/` 或其子目录。新增后同步
@@ -48,10 +52,13 @@
 ## 边界规则
 
 `tools/`、`templates/` 和共享 MSBuild 目标服务模板仓库继续增长。需要说明这些辅助设施的角色时，放在
-`docs/development/README.md`、`tools/README.md` 或 `templates/README.md`；生成 Mod 的 README 保持面向使用者。
+`docs/development/README.md`、`tools/README.md` 或 `templates/README.md`；生成 Mod 的 README 只保留面向使用者的最小入口。
 
 文档中引用跨仓库路径时，首次出现应给出可点击仓库名，并说明后续路径相对哪个仓库根目录。引用组织内部仓库时，同时说明它
 承载的是工具、包还是同步快照角色。
+
+仓库内入口文档优先使用 Markdown 链接；示例路径、占位路径和 MSBuild item 名称使用行内代码。链接目标应指向拥有该规则的
+README 或文档，不从父级文档直接链接到子模块内部实现细节，除非该实现文件就是维护入口。
 
 新增、移除或重命名实际 Mod 时，同步更新该 Mod 自己的 README、维护入口、`Config.Lua`、组包入口、lock file、解决方案
 注册和发布配置。如果仓库在 `mods/README.md` 维护一级目录索引，再同步更新索引；只有这个 Mod 应成为仓库对外使用入口时，
@@ -83,6 +90,9 @@
 
 模板会生成新项目文档。调整文档关系、组包入口说明或共享项目边界时，同步复核 `templates/mod/README.md.scriban`、
 `templates/mod/DEVELOPMENT.md.scriban` 和 `templates/shared/README.md.scriban`，避免新项目重新生成旧的文档关系。
+
+面向 Mod 使用者的 README 模板保持克制，只生成最小入口，不替下游 Mod 规定品牌表达、发布文案或信息结构。面向维护者的模板
+可以说明构建和组包边界，但不把模板仓库维护细节放进生成 Mod 的使用者说明。
 
 新增或调整组包 helper、项目默认组包目标或 `pack-mod` 读取项目包产物的流程时，同步复核 `mods/README.md` 中对
 `TaiwuModPackFile`、`TaiwuModPackDirectory`、`TaiwuModPackProject`、`TaiwuModPackEntry` 和发布目录组包目标的说明。
