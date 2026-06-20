@@ -112,10 +112,6 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 没有显式设置 `TaiwuModPublishPackagePath` 时，发布目录默认进入 `Processes/<ProjectName>/`。
 项目可以用普通 .NET publish 属性控制是否 self-contained、single-file、RID 等发布细节。
 
-只有维护新的组包 helper，或项目不使用仓库默认项目组包目标时，才需要直接关心
-`ResolveTaiwuModPackOutputs`。这是 `pack-mod` 读取项目包产物的 MSBuild 边界；CLI 使用
-MSBuild 目标结果 JSON 作为项目包产物清单。
-
 ## Taiwu 引用和 Publicizer
 
 插件项目默认引用 `Taiwu.ModKit.References.Plugin`。需要访问更宽的游戏 API 时，再按实际代码需要
@@ -123,7 +119,7 @@ MSBuild 目标结果 JSON 作为项目包产物清单。
 
 这些 `Taiwu.ModKit.References.*` 包由组织内部
 [`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 仓库的引用包工具生成和发布；包拆分原则、DLL
-选择和发布目标归该仓库的工具配置维护。本仓库通过稳定包 ID 选择需要引用的包，并在仓库根
+选择和发布目标由该仓库的工具配置管理。本仓库通过稳定包 ID 选择需要引用的包，并在仓库根
 `Directory.Packages.props` 固定版本。
 
 插件项目默认具备编译期 Publicizer 支持，但不会自动公开化游戏 DLL。需要在编译期访问游戏 DLL

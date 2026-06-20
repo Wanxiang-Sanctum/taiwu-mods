@@ -2,9 +2,9 @@
 
 太吾绘卷 mod monorepo 模板仓库。
 
-从 GitHub 模板创建自己的仓库后，在 `mods/` 下维护一个或多个 mod，在 `shared/`
-下维护可被多个 mod 引用的内部共享项目。仓库命令行工具是 `tools/Taiwu.Mods.Cli/`：
-新增 mod、内部共享项目、取消解决方案注册和打包可部署目录都通过它执行。
+从 GitHub 模板创建自己的仓库后，`mods/` 放置一个或多个 mod，`shared/` 放置可被多个
+mod 引用的内部共享项目。仓库命令行工具是 `tools/Taiwu.Mods.Cli/`：新增 mod、内部共享项目、
+取消解决方案注册和打包可部署目录都通过它执行。
 
 ## 开始
 
@@ -127,8 +127,8 @@ README。内部共享项目自己的 API、运行时依赖和部署建议见 `sh
 
 ## 外部依据
 
-模板生成的 mod 项目引用 `Taiwu.ModKit.References.*` NuGet 包。包切分、打包和发布流程归
-[`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 的工具与配置维护；本仓库通过
+模板生成的 mod 项目引用 `Taiwu.ModKit.References.*` NuGet 包。包切分、打包和发布流程由
+[`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 的工具与配置管理；本仓库通过
 `Directory.Packages.props` 固定版本，并通过 `NuGet.config` 配置包源。
 
 涉及游戏机制、游戏文本、运行时行为或 Steam Workshop 语义时，文档以太吾绘卷游戏本体和对应外部平台为依据。

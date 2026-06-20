@@ -61,6 +61,11 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 
 模板只描述新项目的初始骨架。现有项目的真实构建和组包约定以项目文件、`Taiwu.Mod.Pack.proj`、目录 README 和解决方案注册为准。
 
+新增或调整组包 helper、项目默认组包目标或 `pack-mod` 读取项目包产物的流程时，同步复核
+`mods/README.md` 中对 `TaiwuModPackFile`、`TaiwuModPackDirectory`、`TaiwuModPackProject`、
+`TaiwuModPackEntry` 和发布目录组包目标的说明。`ResolveTaiwuModPackOutputs` 是 CLI 读取项目包产物的
+MSBuild 边界；普通 Mod 文档只说明公开 item 和项目配置入口。
+
 ## 生成内容
 
 需要更新 `taiwu-modkit` 的游戏观察快照时，在 `taiwu-modkit` 仓库内运行对应工具重新生成；不要在本仓库复制或手写快照内容。
