@@ -5,11 +5,8 @@
 每个一级子目录是一个可被多个 mod 引用的内部 C# 项目。共享项目为插件项目提供内部库；部署共享项目 DLL
 或其 runtime 依赖的动作，由引用它的前端或后端插件项目声明，具体 item 见 `mods/README.md`。
 
-本 README 说明共享项目的共同边界。共享库自己的 API、运行时依赖、部署建议和维护入口由
-`shared/<ProjectName>/README.md` 维护；引用它的 mod 负责决定是否合并、复制或不部署该 DLL。
-
-从模板创建出的仓库如果维护共享项目入口表，表中只保留选择信息；共享库 API、运行时依赖和部署建议留在项目
-自己的 README 里。
+本 README 说明共享项目的共同边界。共享库自己的 API、运行时依赖和部署建议写在
+`shared/<ProjectName>/README.md`；引用它的 mod 负责决定是否合并、复制或不部署该 DLL。
 
 新建内部共享项目：
 
@@ -38,5 +35,5 @@ shared/MyCompany.Taiwu.Shared/
 `.csproj` 中显式添加 `Krafs.Publicizer` 引用、启用 `UsePublicizer`，并声明具体 `Publicize` 项。
 
 `Taiwu.ModKit.References.*` 包的生成、分类和发布归组织内部
-[`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 仓库维护；共享项目通过稳定包 ID 和本仓库固定版本
+[`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 仓库的工具配置管理；共享项目通过稳定包 ID 和本仓库固定版本
 引用这些包，DLL 清单以该内部仓库的工具配置为准。
