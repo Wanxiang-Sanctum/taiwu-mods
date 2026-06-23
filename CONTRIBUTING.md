@@ -13,7 +13,7 @@
 | 维护模板仓库的构建、检查、模板、工具或工作流 | [`docs/development/README.md`](docs/development/README.md) |
 | 文档结构、受众分层、模板文档同步 | [`docs/development/documentation.md`](docs/development/documentation.md) |
 | Mod 目录约定、组包、插件入口、Taiwu 引用和依赖部署规则 | [`mods/README.md`](mods/README.md) |
-| 生成项目文档模板和输出文档边界 | [`templates/README.md`](templates/README.md) |
+| 生成项目文案、文档模板和输出边界 | [`templates/README.md`](templates/README.md) |
 | 内部共享项目目录约定和共同边界 | [`shared/README.md`](shared/README.md) |
 | 创建/移除命令实现、模板变量和渲染规则 | [`tools/README.md`](tools/README.md)、[`templates/README.md`](templates/README.md) |
 
@@ -21,7 +21,7 @@
 
 - 提交文档变更时，先确认主要读者，并按现有分层放置内容：模板使用入口归根 README，贡献入口归本文件，维护手册归
   `docs/development/`，生成 Mod 的使用者入口归 README 模板，维护入口归 DEVELOPMENT 模板。
-- 修改生成模板的 README 或 DEVELOPMENT 时，同步复核生成后的读者路径，让新项目沿用当前文档关系。
+- 修改生成模板的 README、DEVELOPMENT 或 `Config.Lua` 展示字段时，同步复核生成后的读者路径，避免把具体 Mod 的发布说明或品牌文案预设进模板。
 - 修改 `PackageReference`、`Directory.Packages.props` 或新增项目后，运行 restore，并提交对应项目的
   `packages.lock.json`。
 - 修改文档、配置或项目文件后，运行 `dotnet msbuild repo.proj -t:Check`。

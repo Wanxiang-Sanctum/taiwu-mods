@@ -68,7 +68,7 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 
 创建、取消注册和打包命令的用户路径由根 [`README.md`](../../README.md#快速开始) 与
 [`项目命令`](../../README.md#项目命令) 维护。命令实现入口见 [`tools/README.md`](../../tools/README.md)，模板变量和输出
-文档边界见 [`templates/README.md`](../../templates/README.md)，组包 item 和插件部署语义见
+文案边界见 [`templates/README.md`](../../templates/README.md)，组包 item 和插件部署语义见
 [`mods/README.md`](../../mods/README.md)。
 
 维护模板、CLI 或组包目标时，用根 README 的 `create-mod`、`create-shared` 和 `pack-mod` 路径生成测试项目并验证产物。
@@ -89,7 +89,7 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 | 内部共享项目边界、目标框架和引用边界 | [`shared/README.md`](../../shared/README.md) |
 | 仓库级文档、机制参考和仓库经验 | [`docs/README.md`](../README.md) |
 | 命令行工具实现 | [`tools/README.md`](../../tools/README.md) |
-| 模板目录、模板变量和输出文档边界 | [`templates/README.md`](../../templates/README.md) |
+| 模板目录、模板变量和输出文案边界 | [`templates/README.md`](../../templates/README.md) |
 | GitHub Actions 工作流 | `.github/workflows/` |
 | 仓库级检查目标 | `repo.proj` |
 | 仓库级 MSBuild 和 NuGet 配置 | `Taiwu.Mods.Paths.props`、`Directory.Build.props`、`Directory.Packages.props`、`NuGet.config` |
