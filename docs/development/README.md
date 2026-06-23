@@ -149,21 +149,18 @@ git push origin mods/<ModName>/v<Version>
 上传 `<ModName>-<Version>.zip` 到对应 GitHub Release。zip 内包含可直接替换游戏 Mod 目录的 `<ModName>/` 目录；
 `ModName` 必须与 `mods/` 下的一级目录名一致。
 
-## 仓库结构
+## 结构入口
 
-- `mods/`：实际 Mod 源码目录。Mod 目录约定、组包声明、插件项目、Taiwu 引用、Publicizer、插件依赖和发布目录项目约定见
-  [`mods/README.md`](../../mods/README.md)。
-- `shared/`：内部共享项目目录。共享项目目录约定、共享边界、目标框架和项目级配置入口见
-  [`shared/README.md`](../../shared/README.md)。
-- `docs/`：模板维护者使用的开发维护文档、跨 Mod 机制参考和仓库经验。
-- `tools/`：本仓库辅助命令行工具，负责创建项目、取消解决方案注册和打包可部署目录；实现入口见
-  [`tools/README.md`](../../tools/README.md)。
-- `templates/`：本仓库创建命令使用的 Scriban 初始骨架；变量和渲染规则见
-  [`templates/README.md`](../../templates/README.md)。
-- `.github/workflows/`：GitHub Actions 工作流，覆盖 PR 验证和 Mod release 打包。
-- `artifacts/mods/`：`pack-mod` 输出的可部署目录；手写源码从 `mods/`、`shared/` 和 `tools/` 进入。
-- `Taiwu.Mods.Paths.props`：仓库级 MSBuild 路径 alias，供子目录 props 和项目引用稳定目录。
-- `Taiwu.Mods.slnx`：解决方案入口，收录工具、已注册的 Mod 项目和内部共享项目。
-- `Directory.Build.props`：仓库级编译、分析器和代码质量规则。
-- `Directory.Packages.props`：NuGet 包版本。
-- `NuGet.config`：NuGet 包源、包源映射，以及从环境变量读取 GitHub Packages 凭据的配置。
+仓库目录职责和读者路由见根 [`README.md`](../../README.md) 的仓库结构与阅读入口；本节只保留维护者需要的就近入口。
+
+| 范围 | 维护入口 |
+| --- | --- |
+| Mod 目录约定、组包声明、插件入口和依赖部署 | [`mods/README.md`](../../mods/README.md) |
+| 内部共享项目边界、目标框架和引用边界 | [`shared/README.md`](../../shared/README.md) |
+| 仓库级文档、机制参考和仓库经验 | [`docs/README.md`](../README.md) |
+| 命令行工具实现 | [`tools/README.md`](../../tools/README.md) |
+| 模板目录、模板变量和输出文档边界 | [`templates/README.md`](../../templates/README.md) |
+| GitHub Actions 工作流 | `.github/workflows/` |
+| 仓库级检查目标 | `repo.proj` |
+| 仓库级 MSBuild 和 NuGet 配置 | `Taiwu.Mods.Paths.props`、`Directory.Build.props`、`Directory.Packages.props`、`NuGet.config` |
+| 可部署目录输出 | `artifacts/mods/`；手写源码从 `mods/`、`shared/` 和 `tools/` 进入。 |

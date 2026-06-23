@@ -88,8 +88,8 @@ README 或文档，不从父级文档直接链接到子模块内部实现细节�
 模板只描述新项目的初始骨架。现有项目的真实构建和组包约定以项目文件、`Taiwu.Mod.Pack.proj`、目录 README、lock file 和
 解决方案注册为准。
 
-模板会生成新项目文档。调整文档关系、组包入口说明或共享项目边界时，同步复核 `templates/mod/README.md.scriban`、
-`templates/mod/DEVELOPMENT.md.scriban` 和 `templates/shared/README.md.scriban`，让新项目沿用当前文档关系。
+模板会生成新项目文档。调整文档关系、组包入口说明或共享项目边界时，同步复核
+[`templates/README.md`](../../templates/README.md) 中列出的输出文档模板，让新项目沿用当前文档关系。
 
 面向 Mod 使用者的 README 模板承担安装和使用入口；品牌表达、发布文案和信息结构由具体 Mod 维护。面向维护者的模板说明构建
 和组包边界；模板仓库维护细节归本仓库文档。

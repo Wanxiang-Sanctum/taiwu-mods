@@ -13,9 +13,8 @@
 | 维护模板仓库的构建、检查、模板、工具或工作流 | [`docs/development/README.md`](docs/development/README.md) |
 | 文档结构、受众分层、模板文档同步 | [`docs/development/documentation.md`](docs/development/documentation.md) |
 | Mod 目录约定、组包、插件入口、Taiwu 引用和依赖部署规则 | [`mods/README.md`](mods/README.md) |
-| 生成 Mod 的最小 README 入口和维护入口模板 | [`templates/mod/README.md.scriban`](templates/mod/README.md.scriban)、[`templates/mod/DEVELOPMENT.md.scriban`](templates/mod/DEVELOPMENT.md.scriban) |
+| 生成项目文档模板和输出文档边界 | [`templates/README.md`](templates/README.md) |
 | 内部共享项目目录约定和共同边界 | [`shared/README.md`](shared/README.md) |
-| 共享项目 README 模板 | [`templates/shared/README.md.scriban`](templates/shared/README.md.scriban) |
 | 创建/移除命令实现、模板变量和渲染规则 | [`tools/README.md`](tools/README.md)、[`templates/README.md`](templates/README.md) |
 
 ## 提交前检查

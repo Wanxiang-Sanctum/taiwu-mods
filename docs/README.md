@@ -22,9 +22,10 @@ Mod 仓库时，从根 [`README.md`](../README.md) 开始；提交 issue、讨�
 
 ## 所有权边界
 
+本目录自己的文档清单由上面的阅读入口维护；跨目录内容按最近拥有者进入。
+
 | 内容 | 所属入口 |
 | --- | --- |
-| 模板维护入口、稳定机制解释、文档分层规则 | 本目录 |
 | 实际 Mod 索引、组包规则、插件入口和依赖部署 | [`mods/README.md`](../mods/README.md) |
 | 内部共享项目索引、目标框架和引用边界 | [`shared/README.md`](../shared/README.md) |
 | 创建/移除命令实现入口 | [`tools/README.md`](../tools/README.md) |
