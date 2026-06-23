@@ -7,7 +7,7 @@
 
 | 任务 | 入口 |
 | --- | --- |
-| 构建、检查、打包、发布或验证模板生成项目 | 本文 |
+| 维护检查、工具安装、生成项目与打包验证、发布流水线维护 | 本文 |
 | 维护所有 Mod 共同的组包、插件入口、依赖部署规则 | [`mods/README.md`](../../mods/README.md) |
 | 维护内部共享项目共同边界 | [`shared/README.md`](../../shared/README.md) |
 | 维护创建/移除命令实现或模板 | [`tools/README.md`](../../tools/README.md)、[`templates/README.md`](../../templates/README.md) |
@@ -41,7 +41,8 @@
 
 ## 构建与检查
 
-解决方案构建命令由根 [`README.md`](../../README.md#项目命令) 维护。修改 C# 源码后，按影响范围运行解决方案构建或对应项目构建。
+解决方案构建命令由根 [`README.md`](../../README.md#项目命令) 维护。
+修改 C# 源码后，按影响范围运行解决方案构建或对应项目构建。
 
 检查或格式化仓库文档、配置和项目文件：
 
@@ -63,14 +64,15 @@ dotnet msbuild repo.proj -t:InstallTools
 dotnet msbuild repo.proj -t:UpdateToolChecksums
 ```
 
-## 生成项目与打包
+## 生成项目与打包验证
 
 创建、取消注册和打包命令的用户路径由根 [`README.md`](../../README.md#快速开始) 与
 [`项目命令`](../../README.md#项目命令) 维护。命令实现入口见 [`tools/README.md`](../../tools/README.md)，模板变量和输出
 文档边界见 [`templates/README.md`](../../templates/README.md)，组包 item 和插件部署语义见
 [`mods/README.md`](../../mods/README.md)。
 
-维护模板、CLI 或组包目标时，用根 README 的 `create-mod`、`create-shared` 和 `pack-mod` 路径生成测试项目并验证产物。创建命令只生成初始骨架；项目创建后的真实约定由生成文件、目录 README、lock file 和解决方案注册共同维护。
+维护模板、CLI 或组包目标时，用根 README 的 `create-mod`、`create-shared` 和 `pack-mod` 路径生成测试项目并验证产物。
+创建命令只生成初始骨架；项目创建后的真实约定由生成文件、目录 README、lock file 和解决方案注册共同维护。
 
 ## 发布
 

@@ -6,7 +6,7 @@ Mod 仓库时，从根 [`README.md`](../README.md) 开始；提交 issue、讨�
 
 本目录按文档职责分三类：
 
-- 开发维护：说明模板维护者如何构建、检查、打包、发布、扩展项目和维护文档结构。
+- 开发维护：说明模板维护者的外部依据、维护检查、工具安装、生成项目与打包验证、发布流水线维护和文档结构。
 - 机制参考：解释太吾游戏、Steam Workshop 或外部平台的稳定语义。依据归太吾游戏本体、对应平台或公开可观察行为。
 - 仓库经验：记录跨具体 Mod 复用的发布判断、维护约定或协作经验，依据归模板仓库流程和已采用的项目约定。
 
@@ -16,7 +16,7 @@ Mod 仓库时，从根 [`README.md`](../README.md) 开始；提交 issue、讨�
 
 | 文档 | 何时阅读 |
 | --- | --- |
-| [开发维护入口](development/README.md) | 维护模板仓库、构建检查、模板、工具、工作流或生成项目约定时。 |
+| [开发维护入口](development/README.md) | 维护模板仓库的外部依据、检查、工具安装、工作流或生成项目与打包验证时。 |
 | [文档分层与维护](development/documentation.md) | 调整 README、DEVELOPMENT、docs、模板文档或贡献入口的受众和同步规则时。 |
 | [太吾游戏 Mod 配置与 Steam 发布边界](taiwu-mod-steam-publishing-boundary.md) | 理解太吾读取的 `Config.Lua`、用户设置、插件入口、Steam Workshop 字段和上传内容边界时。 |
 
