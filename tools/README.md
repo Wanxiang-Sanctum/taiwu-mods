@@ -12,7 +12,7 @@
 发布目录项目的语义由 [`mods/README.md`](../mods/README.md) 维护；模板变量、模板目录和渲染规则由
 [`templates/README.md`](../templates/README.md) 维护。
 
-具体 Mod 的例外规则由该 Mod 自己拥有。某个 Mod 需要额外文件、目录、发布目录或依赖部署动作时，写在该 Mod 的
+具体 Mod 的包内容由该 Mod 自己拥有。某个 Mod 需要额外文件、目录、发布目录或依赖部署动作时，写在该 Mod 的
 `Taiwu.Mod.Pack.proj`、项目文件或项目旁 `Taiwu.Mod.props` 中。
 
 ## 维护入口

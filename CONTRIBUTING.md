@@ -20,8 +20,9 @@
 
 ## 提交前检查
 
-- 提交文档变更时，先确认主要读者；不要把模板使用入口、贡献入口、维护手册、生成 Mod 的最小 README 入口和生成 Mod 的维护入口混在同一处。
-- 修改生成模板的 README 或 DEVELOPMENT 时，同步复核生成后的读者路径，避免新项目重新带出旧的文档关系。
+- 提交文档变更时，先确认主要读者，并按现有分层放置内容：模板使用入口归根 README，贡献入口归本文件，维护手册归
+  `docs/development/`，生成 Mod 的使用者入口归 README 模板，维护入口归 DEVELOPMENT 模板。
+- 修改生成模板的 README 或 DEVELOPMENT 时，同步复核生成后的读者路径，让新项目沿用当前文档关系。
 - 修改 `PackageReference`、`Directory.Packages.props` 或新增项目后，运行 restore，并提交对应项目的
   `packages.lock.json`。
 - 修改文档、配置或项目文件后，运行 `dotnet msbuild repo.proj -t:Check`。

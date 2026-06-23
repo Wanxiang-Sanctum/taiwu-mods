@@ -89,10 +89,10 @@ README 或文档，不从父级文档直接链接到子模块内部实现细节�
 解决方案注册为准。
 
 模板会生成新项目文档。调整文档关系、组包入口说明或共享项目边界时，同步复核 `templates/mod/README.md.scriban`、
-`templates/mod/DEVELOPMENT.md.scriban` 和 `templates/shared/README.md.scriban`，避免新项目重新生成旧的文档关系。
+`templates/mod/DEVELOPMENT.md.scriban` 和 `templates/shared/README.md.scriban`，让新项目沿用当前文档关系。
 
-面向 Mod 使用者的 README 模板保持克制，只生成最小入口，不替下游 Mod 规定品牌表达、发布文案或信息结构。面向维护者的模板
-可以说明构建和组包边界，但不把模板仓库维护细节放进生成 Mod 的使用者说明。
+面向 Mod 使用者的 README 模板承担安装和使用入口；品牌表达、发布文案和信息结构由具体 Mod 维护。面向维护者的模板说明构建
+和组包边界；模板仓库维护细节归本仓库文档。
 
 新增或调整组包 helper、项目默认组包目标或 `pack-mod` 读取项目包产物的流程时，同步复核 `mods/README.md` 中对
 `TaiwuModPackFile`、`TaiwuModPackDirectory`、`TaiwuModPackProject`、`TaiwuModPackEntry` 和发布目录组包目标的说明。
