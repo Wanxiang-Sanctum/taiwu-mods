@@ -20,7 +20,7 @@
 - 根 `CONTRIBUTING.md` 面向准备提交 issue、讨论或 PR 的贡献者，提供变更类型路由和提交前检查入口。
 - `docs/README.md` 面向模板仓库维护者，作为仓库级开发维护文档、机制参考和仓库经验的导航，不复制具体 Mod、共享项目或
   模板的可变清单。
-- `docs/development/README.md` 面向模板维护者，说明构建、检查、打包、发布、新增项目、文档和仓库结构。
+- `docs/development/README.md` 面向模板维护者，说明外部依据、维护检查、生成项目验证、发布流水线维护和结构入口。
 - `mods/README.md` 拥有 Mod 目录约定，以及所有 Mod 共同遵守的组包、插件入口、引用和依赖部署规则；从模板建立的仓库可在
   这里维护实际 Mod 索引。
 - `shared/README.md` 拥有内部共享项目的目录约定、共享 API 约定、目标框架和引用边界；从模板建立的仓库可在这里维护共享项目索引。
@@ -76,7 +76,7 @@ README 或文档，不从父级文档直接链接到子模块内部实现细节�
 
 - `tools/Taiwu.Mods.Cli/CommandLineOptions.cs` 中的命令、参数和帮助文本。
 - 根 `README.md` 中的常用命令说明。
-- `docs/development/README.md` 中的维护命令说明。
+- `docs/development/README.md` 中的维护者验证入口。
 - 受影响目录自己的 README 或模板文件。
 
 模板上下文变量或模板选择规则变化时，同步更新：

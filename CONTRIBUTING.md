@@ -29,4 +29,4 @@
 - 修改组包入口、发布目录或插件依赖部署后，运行受影响 Mod 的 `pack-mod` 命令，或用生成出的测试 Mod 验证。
 - 不要提交 `.env`、真实 token 或本机路径；文档和配置只保留环境变量名、占位值或可复现的相对路径。
 
-需要更细的命令、环境变量、发布 tag 和模板同步规则时，回到 [`docs/development/README.md`](docs/development/README.md)。
+需要更细的模板维护检查、工具安装和文档同步规则时，回到 [`docs/development/README.md`](docs/development/README.md)。

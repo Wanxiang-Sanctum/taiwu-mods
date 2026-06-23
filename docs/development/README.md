@@ -33,36 +33,15 @@
 
 ## 环境与依赖
 
-恢复解决方案依赖：
+解决方案 restore、GitHub Packages token 前置条件和 NuGet lock file 提交规则由根
+[`README.md`](../../README.md#项目命令) 维护。
 
-```powershell
-dotnet restore Taiwu.Mods.slnx
-```
-
-模板仓库刚克隆且尚未注册任何 Mod 时，这个命令只恢复 `tools/Taiwu.Mods.Cli/`，不需要 GitHub token。如果解决方案里已有
-Mod 项目，恢复过程会下载 GitHub Packages 上的 `Taiwu.ModKit.*` 包；这时需要准备有 `read:packages` 权限的 GitHub
-classic personal access token，并在当前 PowerShell 会话中提供给 NuGet：
-
-```powershell
-$env:TAIWU_MODKIT_GITHUB_USER = "<GitHubUser>"
-$env:TAIWU_MODKIT_GITHUB_TOKEN = "<GitHubToken>"
-dotnet restore Taiwu.Mods.slnx
-```
-
-本地可以用未跟踪的 `.env` 保存变量值，但提交内容只能保留变量名或占位值。`NuGet.config` 从
+模板维护者本地可以用未跟踪的 `.env` 保存变量值，但提交内容只能保留变量名或占位值。`NuGet.config` 从
 `TAIWU_MODKIT_GITHUB_USER` 和 `TAIWU_MODKIT_GITHUB_TOKEN` 读取凭据。
-
-仓库启用 NuGet lock file，用于固定每个项目的 NuGet 依赖解析结果。新增项目、调整 `PackageReference` 或更新
-`Directory.Packages.props` 后，运行 restore 并提交对应项目目录下生成或更新的 `packages.lock.json`。CI 使用
-locked restore 校验依赖声明和 lock file 是否一致。
 
 ## 构建与检查
 
-构建解决方案：
-
-```powershell
-dotnet build Taiwu.Mods.slnx
-```
+解决方案构建命令由根 [`README.md`](../../README.md#项目命令) 维护。修改 C# 源码后，按影响范围运行解决方案构建或对应项目构建。
 
 检查或格式化仓库文档、配置和项目文件：
 
@@ -86,68 +65,17 @@ dotnet msbuild repo.proj -t:UpdateToolChecksums
 
 ## 生成项目与打包
 
-以下 CLI 命令默认以当前目录作为仓库根目录；从其它目录调用时传入 `--repo-root <path>`。
+创建、取消注册和打包命令的用户路径由根 [`README.md`](../../README.md#快速开始) 与
+[`项目命令`](../../README.md#项目命令) 维护。命令实现入口见 [`tools/README.md`](../../tools/README.md)，模板变量和输出
+文档边界见 [`templates/README.md`](../../templates/README.md)，组包 item 和插件部署语义见
+[`mods/README.md`](../../mods/README.md)。
 
-新增实际 Mod：
-
-```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- create-mod --name MyMod
-```
-
-`ModName` 必须是 C# 命名空间风格的标识符，例如 `MyMod` 或 `MyCompany.MyMod`。创建后，生成器会复制
-`templates/mod/`，渲染模板变量，并把模板内项目加入 `Taiwu.Mods.slnx`。生成的 `Taiwu.Mod.Pack.proj` 是该 Mod
-的可部署目录组包入口。
-
-新增内部共享项目：
-
-```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- create-shared --name MyCompany.Taiwu.Shared
-```
-
-共享项目默认使用 `Shared` 端侧，适合纯共享抽象和通用实现。如果项目面向前端或后端，可以显式指定端侧来选择默认目标框架：
-
-```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- create-shared --name MyCompany.Taiwu.FrontendSupport --side Frontend
-dotnet run --project tools/Taiwu.Mods.Cli -- create-shared --name MyCompany.Taiwu.BackendSupport --side Backend
-```
-
-打包某个 Mod 的可部署目录：
-
-```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
-```
-
-`pack-mod` 默认使用 `Release` 运行 `mods/<ModName>/Taiwu.Mod.Pack.proj`，并把该组包入口声明的文件、目录和项目产物
-组装到 `artifacts/mods/<ModName>/`。这个目录可直接替换游戏内对应 Mod 目录；组包声明、插件入口、依赖部署和发布目录
-项目约定见 [`mods/README.md`](../../mods/README.md)。
-
-从解决方案取消注册某个 Mod，但保留文件：
-
-```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- remove-mod --name MyMod
-```
-
-从解决方案取消注册某个内部共享项目，但保留文件：
-
-```powershell
-dotnet run --project tools/Taiwu.Mods.Cli -- remove-shared --name MyCompany.Taiwu.Shared
-```
-
-创建命令只生成初始骨架。项目创建后，真实构建、组包和部署约定由生成出的项目文件、`Taiwu.Mod.Pack.proj`、目录 README、
-lock file 和解决方案注册共同维护。
+维护模板、CLI 或组包目标时，用根 README 的 `create-mod`、`create-shared` 和 `pack-mod` 路径生成测试项目并验证产物。创建命令只生成初始骨架；项目创建后的真实约定由生成文件、目录 README、lock file 和解决方案注册共同维护。
 
 ## 发布
 
-发布到 GitHub Release：
-
-```powershell
-git tag mods/<ModName>/v<Version>
-git push origin mods/<ModName>/v<Version>
-```
-
-`mods/<ModName>/v<Version>` 是仓库的发布 tag 约定。推送后，GitHub Actions 会以 `<ModName>` 运行 `pack-mod`，
-上传 `<ModName>-<Version>.zip` 到对应 GitHub Release。zip 内包含可直接替换游戏 Mod 目录的 `<ModName>/` 目录；
-`ModName` 必须与 `mods/` 下的一级目录名一致。
+发布 tag 约定和 Release 产物行为由根 [`README.md`](../../README.md#项目命令) 维护。维护发布流水线时，以
+`.github/workflows/` 为工作流实现入口，并用受影响 Mod 的 `pack-mod` 产物验证包内容。
 
 ## 结构入口
 
