@@ -26,7 +26,7 @@ Scriban 渲染；需要渲染内容的文件以 `.scriban` 结尾，输出时会
 
 - `templates/mod/README.md.scriban` 生成面向 Mod 使用者的最小入口。
 - `templates/mod/DEVELOPMENT.md.scriban` 生成面向源码维护者的项目维护入口。
-- `templates/shared/README.md.scriban` 生成内部共享项目维护入口。
+- `templates/shared/README.md.scriban` 生成内部共享项目维护入口，并承接 `shared/README.md` 的共享 API 约定。
 
 调整目录级规则时，同步复核对应模板，避免新项目重新生成旧的文档关系。更细的同步规则见
 [`docs/development/documentation.md`](../docs/development/documentation.md)。
