@@ -32,7 +32,7 @@ Mod 仓库时，从根 [`README.md`](../README.md) 开始；提交 issue、讨�
 | 模板变量、模板目录和渲染规则 | [`templates/README.md`](../templates/README.md) |
 
 具体 Mod 面向使用者的说明归 `mods/<ModName>/README.md`，并由具体 Mod 自己组织；源码模块、内部设计和组包内容归
-`mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README。共享项目 API、运行时依赖和部署建议归
+`mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README。共享项目 API、额外运行时依赖和特殊端侧要求归
 `shared/<ProjectName>/README.md`。
 
 常用命令用法归根 README，模板维护同步规则归开发维护文档。更细的放置与同步规则见

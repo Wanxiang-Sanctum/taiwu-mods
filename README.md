@@ -145,8 +145,8 @@ dotnet run --project tools/Taiwu.Mods.Cli -- remove-shared --name MyCompany.Taiw
 | [`docs/README.md`](docs/README.md) | 阅读跨具体 Mod 复用的太吾机制、平台机制、发布经验和跨项目判断。 |
 
 具体 Mod 面向使用者的说明由对应 `mods/<ModName>/README.md` 自己组织。源码模块、组包内容和内部设计见
-`mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README。内部共享项目自己的 API、运行时依赖和
-部署建议见 `shared/<ProjectName>/README.md`。
+`mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README。内部共享项目自己的 API、额外运行时依赖和
+特殊端侧要求见 `shared/<ProjectName>/README.md`。
 
 ## 外部依据
 
