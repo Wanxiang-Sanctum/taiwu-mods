@@ -64,6 +64,8 @@ shared/MyCompany.Taiwu.Shared/
 需要访问游戏 API 时，再按实际代码需要添加 `Taiwu.ModKit.References.Frontend` 或
 `Taiwu.ModKit.References.Backend` 等引用包。需要访问游戏 DLL 的非 public API 时，在项目自己的
 `.csproj` 中显式添加 `Krafs.Publicizer` 引用、启用 `UsePublicizer`，并声明具体 `Publicize` 项。
+启用 Publicizer 后，共享项目也会使用仓库公共 Publicizer 缓存清理规则；清理行为和跨项目复用边界见
+[`mods/README.md`](../mods/README.md#taiwu-引用和-publicizer)。
 
 `Taiwu.ModKit.References.*` 包的生成、分类和发布归组织内部
 [`taiwu-modkit`](https://github.com/Wanxiang-Sanctum/taiwu-modkit) 仓库的工具配置管理；共享项目通过稳定包 ID 和本仓库固定版本

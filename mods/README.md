@@ -165,6 +165,14 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 Krafs.Publicizer 的实现有关：它从公开化输出生成 `IgnoresAccessChecksToAttribute`，没有公开化输出时，该 attribute
 的程序集名会为空。
 
+仓库启用 Krafs.Publicizer 官方的 `PublicizerClearCacheOnClean`，所以 `dotnet clean` 会删除项目
+`$(IntermediateOutputPath)PublicizedAssemblies` 下的公开化缓存。同一项目的后续构建可以复用 Publicizer 已经生成的公开化程序集。
+如果构建在 Publicizer 写缓存时中断，先运行 `dotnet clean` 清理该项目缓存，再重新构建。
+
+Krafs.Publicizer 官方 targets 把公开化输出目录固定传给当前项目的
+`$(IntermediateOutputPath)PublicizedAssemblies`，没有提供稳定的跨项目共享缓存属性。本模板不重写官方
+`PublicizeAssemblies` target，因此不同插件项目公开化同一个游戏 DLL 时仍可能各自生成缓存。
+
 需要关闭默认 Publicizer 支持时，可以在 `Taiwu.Mod.props` 中设置：
 
 ```xml
