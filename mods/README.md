@@ -72,9 +72,7 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 ```xml
 <Project>
-  <Import
-    Project="$([MSBuild]::GetPathOfFileAbove('Taiwu.Mods.Paths.props', '$(MSBuildThisFileDirectory)'))"
-  />
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Taiwu.Mods.Paths.props', '$(MSBuildThisFileDirectory)'))" />
   <Import Project="$(TaiwuModsModsDir)Taiwu.Mod.Pack.targets" />
 
   <ItemGroup>
@@ -97,7 +95,10 @@ dotnet run --project tools/Taiwu.Mods.Cli -- pack-mod --name MyMod
 
 ```xml
 <ItemGroup>
-  <TaiwuModPackFile Include="$(TargetDir)MyMod.Ipc.dll" PackagePath="Plugins/MyMod.Ipc.dll" />
+  <TaiwuModPackFile
+    Include="$(TargetDir)MyMod.Ipc.dll"
+    PackagePath="Plugins/MyMod.Ipc.dll"
+  />
 </ItemGroup>
 ```
 

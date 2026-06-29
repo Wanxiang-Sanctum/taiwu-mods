@@ -14,22 +14,22 @@ Mod 仓库时，从根 [`README.md`](../README.md) 开始；提交 issue、讨�
 
 ## 阅读入口
 
-| 文档 | 何时阅读 |
-| --- | --- |
-| [开发维护入口](development/README.md) | 维护模板仓库的外部依据、检查、工具安装、工作流或生成项目与打包验证时。 |
-| [文档分层与维护](development/documentation.md) | 调整 README、DEVELOPMENT、docs、模板文档或贡献入口的受众和同步规则时。 |
+| 文档                                                                         | 何时阅读                                                                               |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [开发维护入口](development/README.md)                                        | 维护模板仓库的外部依据、检查、工具安装、工作流或生成项目与打包验证时。                 |
+| [文档分层与维护](development/documentation.md)                               | 调整 README、DEVELOPMENT、docs、模板文档或贡献入口的受众和同步规则时。                 |
 | [太吾游戏 Mod 配置与 Steam 发布边界](taiwu-mod-steam-publishing-boundary.md) | 理解太吾读取的 `Config.Lua`、用户设置、插件入口、Steam Workshop 字段和上传内容边界时。 |
 
 ## 所有权边界
 
 本目录自己的文档清单由上面的阅读入口维护；跨目录内容按最近拥有者进入。
 
-| 内容 | 所属入口 |
-| --- | --- |
-| 实际 Mod 索引、组包规则、插件入口和依赖部署 | [`mods/README.md`](../mods/README.md) |
-| 内部共享项目索引、目标框架和引用边界 | [`shared/README.md`](../shared/README.md) |
-| 创建/移除命令实现入口 | [`tools/README.md`](../tools/README.md) |
-| 模板变量、模板目录和渲染规则 | [`templates/README.md`](../templates/README.md) |
+| 内容                                        | 所属入口                                        |
+| ------------------------------------------- | ----------------------------------------------- |
+| 实际 Mod 索引、组包规则、插件入口和依赖部署 | [`mods/README.md`](../mods/README.md)           |
+| 内部共享项目索引、目标框架和引用边界        | [`shared/README.md`](../shared/README.md)       |
+| 创建/移除命令实现入口                       | [`tools/README.md`](../tools/README.md)         |
+| 模板变量、模板目录和渲染规则                | [`templates/README.md`](../templates/README.md) |
 
 具体 Mod 面向使用者的说明归 `mods/<ModName>/README.md`，并由具体 Mod 自己组织；源码模块、内部设计和组包内容归
 `mods/<ModName>/DEVELOPMENT.md`、`mods/<ModName>/docs/` 或源码子目录 README。共享项目 API、额外运行时依赖和特殊端侧要求归
